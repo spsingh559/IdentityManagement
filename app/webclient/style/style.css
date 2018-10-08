@@ -1,0 +1,90 @@
+.background{
+  background-image: url("../images/digi.jpg");
+  position: absolute;
+  height: 100%;
+  width:100%;
+ overflow: hidden;
+ background-repeat: repeat;
+ font-size: 14px
+  /*background-color: GHOSTWHITE;*/
+  /*opacity:0.5;*/
+
+}
+.homeBackground{
+  background-color: dimgray;
+  height:100%;
+  width: 100%
+}
+
+.landingBackground{
+  background-image: url("../images/landing.jpg");
+  position: relative;
+  height: 1300px;
+ overflow: hidden;
+ background-repeat: repeat;
+ color:white
+}
+
+.upcomingBackground{
+  background-image: url("../images/upcoming.jpg");
+  position: relative;
+  height: 800px;
+ overflow: hidden;
+ background-repeat: repeat;
+ color:white
+}
+
+.reportBackGround{
+  background-image: url("../images/Report.jpg");
+  position: relative;
+  height: 637px;
+ overflow: hidden;
+ background-repeat: repeat;
+}
+
+#createNetwork{
+  position: fixed;
+  right: 0; 
+  bottom: 0;
+  min-width: 100%; 
+  min-height: 100%;
+  width: auto; 
+  height: auto;
+  z-index: -100;
+color: white ;
+}
+
+.profile{
+  background-image: url("../images/profile6.jpg");
+  position: relative;
+  height: 530px;
+ background-repeat:no-repeat;
+ overflow: hidden
+}
+
+.assessment{
+  background-image: url("../images/assessment.jpg");
+  position: relative;
+  height: 900px;
+ background-repeat:repeat;
+ overflow: hidden
+}
+.recommendation{
+  background-image: url("../images/assessment.jpg");
+  position: relative;
+  height: 530px;
+ background-repeat:no-repeat;
+ overflow: hidden;
+ font-size:20px
+}
+.networkTesting{
+  background-image: url("../images/network.jpg");
+  position: relative;
+  height: 600px;
+ background-repeat:no-repeat;
+ overflow: hidden
+}
+
+.networkColor h5 {
+  color: #DCDCDC
+}
