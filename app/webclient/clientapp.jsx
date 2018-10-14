@@ -12,12 +12,14 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 import Home from './components/Home.jsx';
+import Entity from './components/Entity.jsx'
 import ParentComponent from './components/UILayout/Parent.jsx';
 import Login from './components/Login/Login';
-
+import Onboarding from './components/Onboarding/Onboarding';
 import {Route, Router, IndexRoute, hashHistory} from 'react-router';
 
 import Profile from './components/Profile/Profile';
+import ProfileEntity from './components/Profile/ProfileEntity';
 import Landing from './components/Login/Landing';
 // import Verification from './components/Login/Verification';
 import Registration from './components/Login/Registration';
@@ -30,7 +32,10 @@ ReactDOM.render(
 	
 	<Route path="/register" component={Registration} />	
 	<Route path="/" component={ParentComponent}>
+	<Route path="/entity" component={Entity} />
 	<Route path="/myProfile" component={Profile} />
+	<Route path="/onboarding" component={Onboarding} />
+	<Route path="/myProfileEntity" component={ProfileEntity} />
 		<IndexRoute component={Home} />
 		</Route>
 	</Router>

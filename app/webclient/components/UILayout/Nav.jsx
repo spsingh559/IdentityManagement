@@ -13,8 +13,8 @@ import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
-import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
 import Divider from 'material-ui/Divider';
+import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
 
 
 import {Image} from 'react-bootstrap';
@@ -80,31 +80,28 @@ export default class Nav extends React.Component{
   }
   
   handleLogout=()=>{
-    // sessionStorage.removeItem('userLoginDetails');
+    sessionStorage.removeItem('userLoginDetails');
     this.context.router.push("/login");
   }
 	render(){
-    //  let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
-    
+     let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+    if(retrievedUserDetails.role=="US"){
         	return(
 			<div>
 			 <AppBar
              title="MyIdenity"
-             iconClassNameRight="muidocs-icon-navigation-expand-more"
              onLeftIconButtonTouchTap={this.handleToggle}
              style={{position: "fixed",top:'0'}}
+             iconElementRight={ <Badge
+              badgeContent={10}
+              secondary={true}
+              badgeStyle={{top: 12, right: 12}}
             >
-        
-           <List>
-                <ListItem
-                  disabled={true}
-                  leftAvatar={
-                    <Avatar src="../../images/userIcon.png" style={{width:'34px',height:'34px'}} />
-                    
-                  }
-                >
-                </ListItem>
-          </List>
+              <IconButton tooltip="Notifications">
+                <NotificationsIcon color="white"/>
+              </IconButton>
+            </Badge>}
+            >
            </AppBar>
          
            <Drawer
@@ -135,7 +132,71 @@ export default class Nav extends React.Component{
         </Drawer>
         </div>
       )
-    
+                }else{
+                  return(
+                    <div>
+                     <AppBar
+                           title="MyIdenity-Entity"
+                          
+                           onLeftIconButtonTouchTap={this.handleToggle}
+                           style={{position: "fixed",top:'0'}}
+                           iconElementRight={ <Badge
+                            badgeContent={10}
+                            secondary={true}
+                            badgeStyle={{top: 12, right: 12}}
+                          >
+                            <IconButton tooltip="Notifications">
+                              <NotificationsIcon />
+                            </IconButton>
+                          </Badge>}
+                          >
+                         </AppBar>
+                       
+                         <Drawer
+                        docked={false}
+                        width={200}
+                        open={this.state.openDrawer}
+                       
+                        onRequestChange={(openDrawer) => this.setState({openDrawer})}
+                        >
+              <center>
+                      <Image src="../../images/userIcon.png" 
+                      style={{width:'100px',height:'100px'}} circle/>
+                      </center>
+                      <center style={{fontWeight:'bold',fontSize:16}}>Hello {retrievedUserDetails.name}</center>
+                      <Divider />
+                        <MenuItem onTouchTap={this.handleClose}>
+                         <Link to="/entity"> Home </Link>
+                        </MenuItem>
+
+                        <MenuItem onTouchTap={this.handleClose}>
+                         <Link to="/onboarding"> Onboarding </Link>
+                        </MenuItem>
+
+                        <MenuItem onTouchTap={this.handleClose}>
+                         <Link to="/reqSchema"> Request Schema </Link>
+                        </MenuItem>
+
+                        <MenuItem onTouchTap={this.handleClose}>
+                         <Link to="/entityDID"> Manage DID </Link>
+                        </MenuItem>
+
+                        <MenuItem onTouchTap={this.handleClose}>
+                         <Link to="/history"> History </Link>
+                        </MenuItem>
+                       
+                        <MenuItem onTouchTap={this.handleClose}>
+                        <Link to ="/myProfileEntity">My Wallet</Link>
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem onTouchTap={this.handleLogout}>
+                        Logout
+                        </MenuItem>
+                        
+                      </Drawer>
+                      </div>
+                    )
+                }
     }
 	
 	

@@ -4,9 +4,15 @@
   "scripts": {
     "build": "node ./node_modules/webpack/bin/webpack.js",
     "serv": "nodemon server.js",
-    "lint": "gulp lint"
+    "lint": "gulp lint",
+    "start": "node gettingStarted.js",
+    "ledger": "cd ../../../../.. && docker build -f ci/indy-pool.dockerfile -t indy_pool . && docker run --name indy_pool -itd -p 9701-9708:9701-9708 indy_pool"
   },
   "dependencies": {
+    "cryptiles": "^4.1.1",
+    "home-dir": "^1.0.0",
+    "indy-sdk": "file:../../../../wrappers/nodejs",
+    "mkdirp": "^0.5.1",
     "axios": "^0.17.1",
     "body-parser": "^1.17.1",
     "connect-multiparty": "^2.1.0",

@@ -5,10 +5,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import {Grid,Row,Col,Carousel,Panel} from 'react-bootstrap';
-
+import MenuItem from 'material-ui/MenuItem';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
 import FontIcon from 'material-ui/FontIcon';
 import FlatButton from 'material-ui/FlatButton';
 import Avatar from 'material-ui/Avatar';
@@ -64,15 +63,50 @@ const style = {
   }
 } ;
 
+const loginData=[ 
+  {
+    entityName:"Faber",
+    pwd:"123",
+    role:"TA"
+  },
+  {
+    entityName:"Government",
+    pwd:"123",
+    role:"TA"
+  },
+  {
+    entityName:"ACME",
+    pwd:"123",
+    role:"TA"
+  },
+  {
+    entityName:"Thrift",
+    pwd:"123",
+    role:"TA"
+  },
+  {
+    entityName:"Steward",
+    pwd:"123",
+    role:"ST"
+  },
+  {
+    entityName:"Alice",
+    pwd:"123",
+    role:"US"
+  }
+]
+
 export default class Login extends React.Component {
   constructor(props){
     super(props);
     this.state={
       username:'',
       password:'',
-      openDrawer:false,
+      openDrawer:false
     } 
   }
+
+  
   handleUsername(e){
     this.setState({ username: e.target.value });
   }
@@ -103,29 +137,33 @@ export default class Login extends React.Component {
   loginClick=()=>{
     let obj={
       name:this.state.username,
-      password:this.state.password
+      pwd:this.state.password
     }
 
-    // Axios({
-    //   method:'post',
-    //   url:restUrl+'/api/login',
-    //   data:obj
-    // })
-    // .then((data) => {
-    //  console.log(data)
+    Axios({
+      method:'post',
+      url:restUrl+'/api/login',
+      data:obj
+    })
+    .then((data) => {
+     console.log(data)
       
-    //   if(data.data.response=="Succes"){
-    //     sessionStorage.setItem('userLoginDetails',JSON.stringify(data.data));
-    //     this.context.router.push('/');
-    //   }else{
-    //     alert('login Failed');
-    //   }
+      if(data.data.response=="Succes"){
+        sessionStorage.setItem('userLoginDetails',JSON.stringify(data.data));
+        if(data.data.role=="US"){
+          this.context.router.push('/');
+        }else{
+          this.context.router.push('/entity')
+        }
+      }else{
+        alert('login Failed');
+      }
   
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    //   console.log(error+"error in Login data for post");
-    // });
+    })
+    .catch((error) => {
+      console.log(error);
+      console.log(error+"error in Login data for post");
+    });
    
   }
 

@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import {Grid,Row,Col,Carousel,Panel} from 'react-bootstrap';
-
+import SelectField from 'material-ui/SelectField';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
@@ -33,28 +33,31 @@ export default class Registration extends React.Component{
        name:'',
        phoneNumber:"",
        emailID:"",
-       address:"",
-       jioPassword:"",
-      //  lender:'',
+       role:"US",
+       pwd:"",
        regData:{}
       }
      
-        
+      handleChangeRole=(event, index, value) => this.setState({role:value});
 
       handleClose = () => this.setState({openDrawer: false});
       handleToggle = () => this.setState({openDrawer: !this.state.openDrawer});
 
+      static get contextTypes() {
+        return {
+          router: React.PropTypes.object.isRequired
+        }
+      }
+
     registerSuccess=()=>{
         // alert("registerSuccess");
         let obj={
-            _id:Date.now(),
-            regId:this.state.lender=="Lender"?"LID"+Date.now():"BID"+Date.now(),
-            name:this.state.name,
+      _id:Date.now(),
+      name:this.state.name,
        phoneNumber:this.state.phoneNumber,
        emailID:this.state.emailID,
-       address:this.state.address,
-       jioPassword:this.state.jioPassword,
-       roleType:this.state.lender
+       role:this.state.role,
+       pwd:this.state.pwd,
         }
        
         console.log(obj);
@@ -66,8 +69,8 @@ export default class Registration extends React.Component{
             .then((data) => {
                 console.log(data);
                 if(data.data=="success"){
-                    this.setState({regData:obj});
-                   this.setState({open:true})
+                    alert('Registration Successful');
+                    this.context.router.push('/login');
 
                 }else{
                     alert('Server Issue, Try Again after some Time')
@@ -80,9 +83,7 @@ export default class Registration extends React.Component{
             
       }
 
-      // radioChange=(e,value)=>{
-      //   this.setState({lender:value});
-      // }
+      
 
     render(){
 
@@ -95,7 +96,7 @@ export default class Registration extends React.Component{
           ];
 
         return(
-            <div className="background" style={{height:"auto"}}>
+            <div className="background" style={{height:"600px"}}>
             <AppBar
         title="MyIdentity Registration"
         iconClassNameRight="muidocs-icon-navigation-expand-more"
@@ -128,25 +129,7 @@ export default class Registration extends React.Component{
               
               
           
-            <div  style={{marginTop:"30px", color:"white"}}>
-{/*   
-  <h4> I want to Register as </h4>
-        <RadioButtonGroup name="shipSpeed" defaultSelected={this.state.lender} onChange={this.radioChange}>
-      <RadioButton
-      labelStyle={{color:"white"}}
-        value="Lender"
-        label="Lender"
-        iconStyle={{color:"white"}}
-      />
-      
-      <RadioButton
-       labelStyle={{color:"white"}}
-        value="Borrower"
-        label="Borrower"
-        iconStyle={{color:"white"}}
-       />
-      </RadioButtonGroup> */}
-  
+            <div  style={{marginTop:"30px", color:"white"}}>  
   <div style={{align:"left"}}>
   <TextField
    hintStyle={{color:"white"}}
@@ -159,7 +142,8 @@ export default class Registration extends React.Component{
     />
     <br />
     <TextField
-   hintStyle={{color:"white"}}
+  type="Number"
+hintStyle={{color:"white"}}
    inputStyle={{color:"white"}}
    floatingLabelStyle={{color:"white"}}
       hintText=" You can call me at"
@@ -169,6 +153,7 @@ export default class Registration extends React.Component{
     />
     <br />
     <TextField
+    type="Email"
    hintStyle={{color:"white"}}
    inputStyle={{color:"white"}}
    floatingLabelStyle={{color:"white"}}
@@ -178,7 +163,7 @@ export default class Registration extends React.Component{
       fullWidth={true}
     />
     <br />
-    <TextField
+    {/* <TextField
    hintStyle={{color:"white"}}
    inputStyle={{color:"white"}}
    floatingLabelStyle={{color:"white"}}
@@ -186,17 +171,34 @@ export default class Registration extends React.Component{
       onChange = {(event,newValue) => this.setState({address:newValue})}
       floatingLabelText="Address"
       fullWidth={true}
-    />
+    /> */}
+    <SelectField name="role"
+           hintStyle={{color:"white"}}
+           inputStyle={{color:"white"}}
+           floatingLabelStyle={{color:"white"}}
+           hintText="role"
+          floatingLabelText="Select your Role"
+          value={this.state.role}
+          onChange={this.handleChangeRole}
+          fullWidth={true}
+        >
+          <MenuItem value="ST" primaryText="Steward" />
+          <MenuItem value="TA" primaryText="Trust Anchor" />
+          <MenuItem value="US" primaryText="User" />
+        </SelectField>
     <br />
   <TextField
+  type="Password"
    hintStyle={{color:"white"}}
    inputStyle={{color:"white"}}
    floatingLabelStyle={{color:"white"}}
-      hintText=" Set Password"
-      onChange = {(event,newValue) => this.setState({jioPassword:newValue})}
+      hintText=" I am not seeing your password"
+      onChange = {(event,newValue) => this.setState({pwd:newValue})}
       floatingLabelText="Set password"
       fullWidth={true}
     />
+    <br />
+    <br />
     <br />
     <br />
     <RaisedButton style={{borderRadius:'13px'}} label="Submit" primary={true}  onTouchTap={this.registerSuccess} fullWidth={true}/>

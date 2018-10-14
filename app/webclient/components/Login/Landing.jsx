@@ -78,7 +78,7 @@ export default class Landing extends React.Component{
           <Link to ="/login">Login</Link>
           </MenuItem>
           <MenuItem onTouchTap={this.handleClose}>
-          <Link to ="/verification">Register</Link>
+          <Link to ="/register">Register</Link>
           </MenuItem>
               
               
