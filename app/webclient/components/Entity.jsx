@@ -160,7 +160,7 @@ export default class Entity extends React.Component {
            </h4>
                
            <Divider />
-               <span> Request Schema</span>
+           <Link to="/requestSchema"> Add More </Link>
             </center>
                </Col>
 
