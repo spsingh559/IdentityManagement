@@ -16,7 +16,9 @@ import Forward from 'material-ui/svg-icons/content/forward';
 export default class Entity extends React.Component {
 
   state={
-    onboardingStatus:''
+    onboardingStatus:'',
+    didCount:0,
+    schemaCount:0
   }
 
   static get contextTypes() {
@@ -27,6 +29,7 @@ export default class Entity extends React.Component {
 
   componentDidMount=()=>{
     let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+    console.log(retrievedUserDetails);
     Axios({
       method:'get',
       url:restUrl+'/api/onboardingStatus/'+retrievedUserDetails._id,
@@ -39,6 +42,33 @@ export default class Entity extends React.Component {
     .catch((err)=>{
       alert('Try again Error in fetching record')
     })
+
+    Axios({
+      method:'get',
+      url:restUrl+'/api/did/'+retrievedUserDetails.name,
+    })
+    .then((data) => {
+      console.log('--------------result of did----------------');
+      console.log(data)
+      this.setState({didCount:data.data.data.length})
+    })
+    .catch((err)=>{
+      alert('Try again Error in fetching record for DID')
+    })
+
+    Axios({
+      method:'get',
+      url:restUrl+'/api/schemaStatus/'+retrievedUserDetails.name,
+    })
+    .then((data) => {
+      console.log('--------------result of did----------------');
+      console.log(data)
+      this.setState({schemaCount:data.data.data.length})
+    })
+    .catch((err)=>{
+      alert('Try again Error in fetching record for schema')
+    })
+
   }
 
   onboarding=()=>{
@@ -69,7 +99,7 @@ export default class Entity extends React.Component {
            <Col xs={6} style={{background:"rgb(0, 188, 212)",height:"100px", color:"white",marginTop:"50px"}}>
            <center>
            <h4>
-           2 DID
+          {this.state.didCount} DID
            </h4>
                
            <Divider />
@@ -101,6 +131,24 @@ export default class Entity extends React.Component {
 
                <Col xs={6} style={{background:"white", height:"100px",marginTop:"20px"}}>
               <center>
+           <h3 style={{marginTop:"30px"}}>Create Schema</h3>
+          </center>
+           
+              </Col>
+           <Col xs={6} style={{background:"rgb(0, 188, 212)",height:"100px", marginTop:"20px",color:"white"}}>
+           <center>
+           <h4>
+           {this.state.schemaCount} Schema 
+           </h4>
+               
+           <Divider />
+           <Link to="/createSchema"> Add More </Link>
+               {/* <span> Add More</span> */}
+            </center>
+               </Col>
+  
+               <Col xs={6} style={{background:"white", height:"100px",marginTop:"20px"}}>
+              <center>
            <h3 style={{marginTop:"30px"}}>Schema Credential</h3>
           </center>
            
@@ -108,7 +156,7 @@ export default class Entity extends React.Component {
            <Col xs={6} style={{background:"rgb(0, 188, 212)",height:"100px", marginTop:"20px",color:"white"}}>
            <center>
            <h4>
-           1 Json Schema
+           1  Schema Cred
            </h4>
                
            <Divider />

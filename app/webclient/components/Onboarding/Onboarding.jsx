@@ -10,6 +10,8 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
+import Axios from 'axios';
+import restUrl from '../restUrl';
 
 
 
@@ -31,6 +33,12 @@ export default class Onboarding extends React.Component {
         this.setState({open: false});
       };
 
+      static get contextTypes() {
+        return {
+          router: React.PropTypes.object.isRequired
+        }
+      }
+
     Onboarding=()=>{
         this.setState({open: true});
         // alert('Are you ready');
@@ -38,6 +46,29 @@ export default class Onboarding extends React.Component {
 
     handleApprove=()=>{
         this.setState({open:false, openReq:true})
+        let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+        let obj={
+          entityName:retrievedUserDetails.name
+        }
+        Axios({
+          method:'post',
+          url:restUrl+'/api/onboarding/',
+          data:obj
+        })
+        .then((data) => {
+          console.log('--------------result of onboarding ----------------');
+          console.log(data)
+          if(data.data.response=='Success'){
+            alert('ye success')
+            this.context.router.push('/entity');
+          }else{
+            alert('ek bar aur');
+          }
+          
+        })
+        .catch((err)=>{
+          alert('Try again Error in fetching record')
+        })
     }
   render() {
 

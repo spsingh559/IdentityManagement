@@ -63,38 +63,7 @@ const style = {
   }
 } ;
 
-const loginData=[ 
-  {
-    entityName:"Faber",
-    pwd:"123",
-    role:"TA"
-  },
-  {
-    entityName:"Government",
-    pwd:"123",
-    role:"TA"
-  },
-  {
-    entityName:"ACME",
-    pwd:"123",
-    role:"TA"
-  },
-  {
-    entityName:"Thrift",
-    pwd:"123",
-    role:"TA"
-  },
-  {
-    entityName:"Steward",
-    pwd:"123",
-    role:"ST"
-  },
-  {
-    entityName:"Alice",
-    pwd:"123",
-    role:"US"
-  }
-]
+
 
 export default class Login extends React.Component {
   constructor(props){

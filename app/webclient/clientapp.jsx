@@ -21,6 +21,7 @@ import {Route, Router, IndexRoute, hashHistory} from 'react-router';
 import Profile from './components/Profile/Profile';
 import ProfileEntity from './components/Profile/ProfileEntity';
 import Landing from './components/Login/Landing';
+import CreateSchema from './components/Schema/CreateSchema';
 // import Verification from './components/Login/Verification';
 import Registration from './components/Login/Registration';
 
@@ -35,6 +36,7 @@ ReactDOM.render(
 	<Route path="/entity" component={Entity} />
 	<Route path="/myProfile" component={Profile} />
 	<Route path="/onboarding" component={Onboarding} />
+	<Route path="/createSchema" component={CreateSchema} />
 	<Route path="/myProfileEntity" component={ProfileEntity} />
 		<IndexRoute component={Home} />
 		</Route>
