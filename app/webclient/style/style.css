@@ -16,6 +16,12 @@
   width: 100%
 }
 
+.userbackground{
+  background-image: url("../images/bgPic.gif");
+  height:100%;
+  width: 100%
+}
+
 .landingBackground{
   background-image: url("../images/landing.jpg");
   position: relative;

@@ -120,7 +120,11 @@ export default class Nav extends React.Component{
           <MenuItem onTouchTap={this.handleClose}>
            <Link to="/"> Home </Link>
           </MenuItem>
-         
+
+          <MenuItem onTouchTap={this.handleClose}>
+          <Link to ="/myServices">My Services</Link>
+          </MenuItem>
+
           <MenuItem onTouchTap={this.handleClose}>
           <Link to ="/myProfile">My Profile</Link>
           </MenuItem>
@@ -187,6 +191,10 @@ export default class Nav extends React.Component{
 
                         <MenuItem onTouchTap={this.handleClose}>
                          <Link to="/history"> History </Link>
+                        </MenuItem>
+
+                         <MenuItem onTouchTap={this.handleClose}>
+                         <Link to="/createService"> Create Service </Link>
                         </MenuItem>
                        
                         <MenuItem onTouchTap={this.handleClose}>

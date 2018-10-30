@@ -22,8 +22,9 @@ import Profile from './components/Profile/Profile';
 import ProfileEntity from './components/Profile/ProfileEntity';
 import Landing from './components/Login/Landing';
 import CreateSchema from './components/Schema/CreateSchema';
+import CreateService from './components/Service/CreateService';
+import MyServices from './components/UserService/MyServices';
 import RequestSchema from './components/RequestSchema/RequestSchema';
-// import Verification from './components/Login/Verification';
 import Registration from './components/Login/Registration';
 
 ReactDOM.render(
@@ -38,7 +39,9 @@ ReactDOM.render(
 	<Route path="/myProfile" component={Profile} />
 	<Route path="/onboarding" component={Onboarding} />
 	<Route path="/createSchema" component={CreateSchema} />
+	<Route path="/myServices" component={MyServices} />
 	<Route path="/requestSchema" component={RequestSchema} />
+	<Route path="/createService" component={CreateService} />
 	<Route path="/myProfileEntity" component={ProfileEntity} />
 		<IndexRoute component={Home} />
 		</Route>

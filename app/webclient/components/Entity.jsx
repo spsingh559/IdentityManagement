@@ -18,7 +18,8 @@ export default class Entity extends React.Component {
   state={
     onboardingStatus:'',
     didCount:0,
-    schemaCount:0
+    schemaCount:0,
+    schemacredCount:0
   }
 
   static get contextTypes() {
@@ -67,6 +68,19 @@ export default class Entity extends React.Component {
     })
     .catch((err)=>{
       alert('Try again Error in fetching record for schema')
+    })
+
+    Axios({
+      method:'get',
+      url:restUrl+'/api/schemaCred/'+retrievedUserDetails.name,
+    })
+    .then((data) => {
+      console.log('--------------result of schema Cred----------------');
+      console.log(data)
+      this.setState({schemacredCount:data.data.data.length})
+    })
+    .catch((err)=>{
+      alert('Try again Error in fetching record for schema cred')
     })
 
   }
@@ -156,7 +170,7 @@ export default class Entity extends React.Component {
            <Col xs={6} style={{background:"rgb(0, 188, 212)",height:"100px", marginTop:"20px",color:"white"}}>
            <center>
            <h4>
-           1  Schema Cred
+           {this.state.schemacredCount} Schema Cred
            </h4>
                
            <Divider />

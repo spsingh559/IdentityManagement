@@ -200,6 +200,118 @@ governmentWallet = await indy.openWallet(governmentWalletConfig, governmentWalle
 }
 // ---------------------CS End------------------------------------------
 
+// ------------------------Creat Schema Credential----------------------
+app.post('/api/createSchemaCred', function(req,res){
+    console.log('api registration');
+    // console.log(req.body);
+    // createSchemaCred();
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+        var query = { owner: req.body.name};
+        dbo.collection("DID").find(query).toArray(function(err, result) {
+    if (err) throw err;
+    // console.log(result);
+    this.createSchemaCred(req.body,result[result.length-1].did,res);
+    db.close();
+  })
+
+
+})
+   
+
+})
+
+createSchemaCred=(obj,did,res)=>{
+    createCred();
+    async function createCred(){
+        console.log("==============================");
+        console.log(obj.name+ " ===Credential Definition Setup ==");
+    
+        console.log(obj.name+" -> Get \"Transcript\" Schema from Ledger");
+        [, schema] = await getSchema(poolHandle, did, obj.schemaId);
+    
+        console.log("\"Faber\" -> Create and store in Wallet \"Faber Transcript\" Credential Definition");
+        let WalletConfig = {'id': obj.name+"Wallet"}
+    let WalletCredentials = {'key': obj.name+"_key"}
+Wallet = await indy.openWallet(WalletConfig, WalletCredentials);
+
+        let [CredDefId, CredDefJson] = await indy.issuerCreateAndStoreCredentialDef(Wallet, did, schema, 'TAG1', 'CL', '{"support_revocation": false}');
+        console.log("CredDefId", CredDefId);
+        console.log("CredDefJson", CredDefJson);
+    
+        console.log(obj.name+" -> Send  \"Faber Transcript\" Credential Definition to Ledger");
+        await sendCredDef(poolHandle, Wallet, did,CredDefJson);
+        await indy.closeWallet(Wallet);
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            var dbo = db.db("sovrinDB");
+            let schemaObj={
+                _id:Date.now(),
+                CredDefId:CredDefId,
+                name:obj.name
+            };
+            console.log('schema cred obj is', schemaObj);
+            dbo.collection("credential").insertOne(schemaObj, function(err, result) {
+              if (err) throw err;
+              console.log("schema cred document inserted");
+              res.send("success");
+            });
+    
+          });
+       }
+}
+
+
+// -----------------------CSC End---------------------------------------
+
+// -----------------------Create Service -------------------------------
+
+app.post('/api/creatService', function(req,response){
+    console.log('api transcript');
+    console.log(req.body);
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+        dbo.collection("createService").insertOne(req.body, function(err, res) {
+          if (err) throw err;
+          console.log("1 document inserted");
+          response.send("success");
+        });
+      });
+
+})
+
+
+
+// ----------------------- CS ------------------------------------------
+
+// -----------------------Get Service -------------------------------
+
+app.post('/api/getServices/:status', function(req,res){
+    console.log('status receivvedd is', req.params.status);
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+       
+        
+        var query = {stats: req.params.status};
+  dbo.collection("createService").find(query).toArray(function(err, result) {
+    if (err) throw err;
+    // console.log(result);
+    res.send({data:result})
+    db.close();
+  })
+
+
+})
+
+})
+
+
+
+// ----------------------- CS ------------------------------------------
+
 app.post('/api/registration', function(req,response){
     console.log('api registration');
     console.log(req.body);
@@ -313,6 +425,28 @@ app.get('/api/schemaStatus/:name', function(req,res){
         
         var query = {name: req.params.name};
   dbo.collection("schema").find(query).toArray(function(err, result) {
+    if (err) throw err;
+    // console.log(result);
+    res.send({data:result})
+    db.close();
+  })
+
+
+})
+
+});
+
+// -------------Schema Cred Request-----------------------------------
+
+app.get('/api/schemaCred/:name', function(req,res){
+    console.log('name receivvedd is', req.params.name);
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+        // var myobj = { name: "Company Inc", address: "Highway 37" };
+        
+        var query = {name: req.params.name};
+  dbo.collection("credential").find(query).toArray(function(err, result) {
     if (err) throw err;
     // console.log(result);
     res.send({data:result})

@@ -18,6 +18,7 @@ import Send from 'material-ui/svg-icons/content/send';
 import SelectField from 'material-ui/SelectField';
 import { Link } from 'react-router';
 import MenuItem from 'material-ui/MenuItem';
+import Snackbar from 'material-ui/Snackbar';
 
 let newArr;
 export default class RequestSchema extends React.Component {
@@ -25,13 +26,27 @@ export default class RequestSchema extends React.Component {
     state={
       schemaID:'',
       arr:[],
-      value:''
+      value:'',
+      open: false
     }
     static get contextTypes() {
       return {
         router: React.PropTypes.object.isRequired
       }
     }
+
+    handleClick = () => {
+      this.setState({
+        open: true,
+      });
+    };
+  
+    handleRequestClose = () => {
+      this.setState({
+        open: false,
+      });
+    };
+  
 
     componentDidMount=()=>{
       let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
@@ -47,7 +62,6 @@ export default class RequestSchema extends React.Component {
        var self =this;
        newArr=[];
         data.data.data.forEach((data)=>{
-          console.log(data);
           this.state.arr.push(<MenuItem value={data.schemaId} key={data.schemaId} primaryText={data.schemaName} />)
         })
         console.log('newArr')
@@ -61,12 +75,34 @@ export default class RequestSchema extends React.Component {
     handleChangeRole=(event, index, value) => this.setState({value:value});
 
     submitSchema=()=>{
+      let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+      let obj={
+        schemaId:this.state.value,
+        name:retrievedUserDetails.name
+      }
       
+      Axios({
+        method:'post',
+        url:restUrl+'/api/createSchemaCred',
+        data:obj
+      })
+      .then((data) => {
+        console.log('--------------result of creating Schema Cred----------------');
+        console.log(data)
+        if(data.data=="success"){
+          this.setState({open:true,value:''});
+        }
+        // this.setState({schemaCount:data.data.data.length})
+     
+       
+      })
+      .catch((err)=>{
+        alert('Try again Error in fetching record for schema')
+      })
     }
    
   render() {
     console.log('------inside render---------');
-console.log(this.state.arr);
     // let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
     
     
@@ -102,6 +138,12 @@ console.log(this.state.arr);
       icon={<Send />}
     />
     </center>
+    <Snackbar
+          open={this.state.open}
+          message="schema Credential successfully created"
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestClose}
+        />
      </Grid>
      </div>
       )

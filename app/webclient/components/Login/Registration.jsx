@@ -143,6 +143,7 @@ export default class Registration extends React.Component{
     <br />
     <TextField
   type="Number"
+  autoComplete="off"
 hintStyle={{color:"white"}}
    inputStyle={{color:"white"}}
    floatingLabelStyle={{color:"white"}}
@@ -153,6 +154,7 @@ hintStyle={{color:"white"}}
     />
     <br />
     <TextField
+    autoComplete="off"
     type="Email"
    hintStyle={{color:"white"}}
    inputStyle={{color:"white"}}
