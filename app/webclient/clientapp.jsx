@@ -27,6 +27,12 @@ import MyServices from './components/UserService/MyServices';
 import RequestSchema from './components/RequestSchema/RequestSchema';
 import Registration from './components/Login/Registration';
 
+// All Certificate list-----------------------
+// ji
+
+import BirthCertificate from './components/Certificates/BirthCertificate/BirthCertificate';
+
+// ------------------Certifcate End ---------------
 ReactDOM.render(
 	<MuiThemeProvider>
 	<Router history ={hashHistory} >
@@ -42,6 +48,7 @@ ReactDOM.render(
 	<Route path="/myServices" component={MyServices} />
 	<Route path="/requestSchema" component={RequestSchema} />
 	<Route path="/createService" component={CreateService} />
+	<Route path="/birthcertifcate" component={BirthCertificate} />
 	<Route path="/myProfileEntity" component={ProfileEntity} />
 		<IndexRoute component={Home} />
 		</Route>

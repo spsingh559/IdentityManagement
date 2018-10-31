@@ -9,7 +9,6 @@ export default class EachTAPendingServiceDetail extends React.Component{
       }
     
     approve=()=>{
-        alert(this.props.data.uiRoutes);
         this.context.router.push(this.props.data.uiRoutes)
     }
    
