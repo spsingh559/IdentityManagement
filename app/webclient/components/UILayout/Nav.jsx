@@ -194,7 +194,7 @@ export default class Nav extends React.Component{
                         </MenuItem>
 
                          <MenuItem onTouchTap={this.handleClose}>
-                         <Link to="/createService"> Create Service </Link>
+                         <Link to="/createService"> Manage Services </Link>
                         </MenuItem>
                        
                         <MenuItem onTouchTap={this.handleClose}>

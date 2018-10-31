@@ -43,7 +43,7 @@ export default class Home extends React.Component {
          
            <Col xs={6} style={{background:"white", height:"100px",marginTop:"50px"}}>
               <center>
-           <h3 style={{marginTop:"30px"}}>Wallet Status</h3>
+           <h3 style={{marginTop:"30px"}}>Wallet </h3>
           </center>
            
               </Col>

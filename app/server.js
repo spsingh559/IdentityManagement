@@ -288,14 +288,12 @@ app.post('/api/creatService', function(req,response){
 
 // -----------------------Get Service -------------------------------
 
-app.post('/api/getServices/:status', function(req,res){
-    console.log('status receivvedd is', req.params.status);
+app.get('/api/getServices/', function(req,res){
+    console.log('getService api');
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
-        var dbo = db.db("sovrinDB");
-       
-        
-        var query = {stats: req.params.status};
+        var dbo = db.db("sovrinDB");        
+        var query = {serviceStatus: "Active"};
   dbo.collection("createService").find(query).toArray(function(err, result) {
     if (err) throw err;
     // console.log(result);
@@ -305,6 +303,33 @@ app.post('/api/getServices/:status', function(req,res){
 
 
 })
+
+})
+
+
+
+// ----------------------- CS ------------------------------------------
+
+//  -----------------------Update Service -------------------------------
+
+app.patch('/api/updateServices/', function(req,res){
+    console.log('updateServices api');
+    console.log(req.body);
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");        
+        var query = {_id: req.body._id};
+  var newvalues = { $set: {list: req.body.list } };
+  dbo.collection("createService").updateOne(query,newvalues,function(err, result) {
+    if (err) throw err;
+    console.log('result for update');
+    console.log(result);
+    res.send({response:"Success"})
+    db.close();
+  })
+
+
+    })
 
 })
 

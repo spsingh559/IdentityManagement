@@ -1,21 +1,16 @@
 import React from 'react';
-import Paper from 'material-ui/Paper';
 import {Col, Row, Grid,Image} from 'react-bootstrap';
-import Divider from 'material-ui/Divider/Divider';
-import LinearProgress from 'material-ui/LinearProgress';
 import ActionHome from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
-import Content from 'material-ui/svg-icons/content/add';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import CircularProgress from 'material-ui/CircularProgress';
 import Axios from 'axios';
 import restUrl from '../restUrl';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import Send from 'material-ui/svg-icons/content/send';
 import Snackbar from 'material-ui/Snackbar';
+import Draft from 'material-ui/svg-icons/content/create';
+import Inbox from 'material-ui/svg-icons/content/inbox';
+import Pending from 'material-ui/svg-icons/content/report';
+import {Tabs, Tab} from 'material-ui/Tabs';
 export default class CreateService extends React.Component{
 
     state={
@@ -25,11 +20,13 @@ export default class CreateService extends React.Component{
     }
 
     submitService=()=>{
+      let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
         var monthName=["Jan", "Feb","March","April","May","Jun","July","Aug","Sept","Oct","Nov","Dec"];
 var date=new Date();
 var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYear()+" "+ date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
         let obj={
             _id:Date.now(),
+            owner:retrievedUserDetails.name,
             serviceName:this.state.serviceName,
             serviceDescription:this.state.serviceDescription,
             apiUrl:'/api/get'+this.state.serviceName.toLowerCase(),
@@ -73,9 +70,14 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
         return(
             <div style={{marginTop:"90px",minHeight:"600px"}} className="homeBackground">
             <div style={{backgroundColor:"black", color:"white", height:"40px", padding:"0px 5px"}}>
-               <center> <h4> <span onTouchTap={this.goBack}><ActionHome color="white" style={{marginRight:"10px"}} /></span>Create Service </h4> </center>
+               <center> <h4> <span onTouchTap={this.goBack}><ActionHome color="white" style={{marginRight:"10px"}} /></span>Manage Services </h4> </center>
          </div>
-         <Grid >
+         <Tabs>
+    <Tab
+      icon={<Draft />}
+      label="Create"
+    >
+   <Grid >
              <Col xs={12}>
          <TextField
       hintText="Service Name"
@@ -115,6 +117,24 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
           onRequestClose={this.handleRequestClose}
         />
              </Grid>
+      </Tab>
+      <Tab
+      icon={<Pending />}
+      label="Pending"
+    >
+    <Grid>
+    <Col xs={12}>
+    {/* <PendingServiceDetail data={this.state.serviceData} /> */}
+    </Col>
+    </Grid>
+    </Tab>
+    <Tab
+      icon={<Inbox />}
+      label="Issued"
+    />
+    
+  </Tabs>
+         
              </div>
         )
     }
