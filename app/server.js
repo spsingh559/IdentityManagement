@@ -305,10 +305,29 @@ app.get('/api/getServices/', function(req,res){
 })
 
 })
-
-
-
 // ----------------------- CS ------------------------------------------
+
+// ---------------------Get service for owner --------------------------
+
+app.get('/api/getServicesForOwner/:owner', function(req,res){
+    console.log('getService api');
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");        
+        var query = {serviceStatus: "Active" , owner:req.params.owner};
+  dbo.collection("createService").find(query).toArray(function(err, result) {
+    if (err) throw err;
+    // console.log(result);
+    res.send({data:result})
+    db.close();
+  })
+
+
+})
+
+})
+
+// ---------------------- Get service for owner End ---------------------------
 
 //  -----------------------Update Service -------------------------------
 
@@ -322,9 +341,9 @@ app.patch('/api/updateServices/', function(req,res){
   var newvalues = { $set: {list: req.body.list } };
   dbo.collection("createService").updateOne(query,newvalues,function(err, result) {
     if (err) throw err;
-    console.log('result for update');
-    console.log(result);
-    res.send({response:"Success"})
+    // console.log('result for update');
+    // console.log(result);
+    res.send("success")
     db.close();
   })
 

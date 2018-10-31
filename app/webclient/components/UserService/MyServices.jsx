@@ -9,10 +9,12 @@ import Inbox from 'material-ui/svg-icons/content/inbox';
 import Pending from 'material-ui/svg-icons/content/report';
 import ShowServiceDetail from './ShowServiceDetail';
 import PendingServiceDetail from './PendingServiceDetail';
+import Snackbar from 'material-ui/Snackbar';
 export default class MyServices extends React.Component{
 
     state={
-        serviceData:[]
+        serviceData:[],
+        open:false
     }
 
     componentDidMount=()=>{
@@ -50,7 +52,7 @@ export default class MyServices extends React.Component{
               _id:_id,
               list:arr
           }
-          console.log(this.state.serviceData);
+        //   console.log(this.state.serviceData);
         Axios({
             method:'patch',
             url:restUrl+'/api/updateServices',
@@ -59,12 +61,13 @@ export default class MyServices extends React.Component{
           .then((data) => {
             console.log('--------------result of updaing Service ----------------');
             console.log(data)
-            // if(data.data.data.length==0){
-            //     alert('no service available !!')
-            // }else{
-            //     this.setState({serviceData:data.data.data})
-            // }
-            // this.setState({onboardingStatus:data.data.re.onboardingStatus})
+            if(data.data=='success'){
+                this.setState({open:true});
+                 this.setState({serviceData:this.state.serviceData})
+              }else{
+                alert('Error while creating service');
+              }
+            
           })
           .catch((err)=>{
             alert('Try again Error in fetching record')
@@ -107,7 +110,12 @@ export default class MyServices extends React.Component{
     />
     
   </Tabs>
-             
+  <Snackbar
+          open={this.state.open}
+          message=" Request process successful !!"
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestClose}
+        />  
       
       </div>
         )

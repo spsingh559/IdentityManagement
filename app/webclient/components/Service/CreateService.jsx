@@ -11,13 +11,39 @@ import Draft from 'material-ui/svg-icons/content/create';
 import Inbox from 'material-ui/svg-icons/content/inbox';
 import Pending from 'material-ui/svg-icons/content/report';
 import {Tabs, Tab} from 'material-ui/Tabs';
+
+import TAPendingServiceDetail from './TAPendingServiceDetail';
 export default class CreateService extends React.Component{
 
     state={
         serviceName:'',
         serviceDescription:'',
-        open:false
+        open:false,
+        serviceData:[]
     }
+
+    componentDidMount=()=>{
+      let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+      console.log(retrievedUserDetails);
+      Axios({
+          method:'get',
+          url:restUrl+'/api/getServicesForOwner/'+retrievedUserDetails.name,
+        })
+        .then((data) => {
+          console.log('--------------result of get Service----------------');
+          console.log(data)
+          if(data.data.data.length==0){
+              alert('no service available !!')
+          }else{
+              this.setState({serviceData:data.data.data})
+          }
+          // this.setState({onboardingStatus:data.data.data.onboardingStatus})
+        })
+        .catch((err)=>{
+          console.log(err,'Try again Error in fetching record in Services')
+        })
+    
+  }
 
     submitService=()=>{
       let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
@@ -124,13 +150,13 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
     >
     <Grid>
     <Col xs={12}>
-    {/* <PendingServiceDetail data={this.state.serviceData} /> */}
+    <TAPendingServiceDetail  data={this.state.serviceData}/>
     </Col>
     </Grid>
     </Tab>
     <Tab
       icon={<Inbox />}
-      label="Issued"
+      label="Approved"
     />
     
   </Tabs>
