@@ -11,64 +11,71 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 
-// import restUrl from '../restUrl';
+import restUrl from '../../restUrl';
 
 export default class BirthCertificate extends React.Component {
 
 
     state={
-        name:"",
+        name:this.props.params.name,
         address:"",
         fatherName:"",
         motherName:"",
-        date:"",
+        dob:"",
         POB:"",
         time:"",
         gender:""
        }
  
-      handleChange = (event, date) => { this.setState({ date: date, });};
+      handleChange = (event, date) => { this.setState({ dob: date });};
       handleGenderChange = (event, index, gender) => this.setState({gender});
       handleClose = () => this.setState({openDrawer: false});
       handleToggle = () => this.setState({openDrawer: !this.state.openDrawer});
 
       applyBirthCert=()=>{
+        let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
         let obj={
             _id:Date.now(),
-            name:this.state.name,
+            certificateData:{
+              name:this.state.name,
             address:this.state.address,
             fatherName:this.state.fatherName,
             motherName:this.state.motherName,
-            DOB:this.state.date,
+            DOB:this.state.dob,
             POB:this.state.POB,
             time:this.state.time,
-            gender:this.state.gender
+            gender:this.state.gender,
+            },            
+            CredDefId:this.props.params.CredDefId,
+            issuer:retrievedUserDetails.name
         }
-       
+       console.log('obj is');
         console.log(obj);
-        // Axios({
-        //     method:'post',
-        //     url:restUrl+'/api/applyBirthCert',
-        //     data:obj
-        //     })
-        //     .then((data) => {
-        //         console.log(data);
-        //         if(data.data=="success"){
-        //             this.setState({birthData:obj});
-        //            this.setState({open:true})
+        Axios({
+            method:'post',
+            url:restUrl+'/api/birthCertificate',
+            data:obj
+            })
+            .then((data) => {
+                console.log(data);
+                // if(data.data=="success"){
+                //     this.setState({birthData:obj});
+                //    this.setState({open:true})
 
-        //         }else{
-        //             alert('Server Issue, Try Again after some Time')
-        //         }                   
-        //     })
-        //     .catch((error) => {
-        //     console.log(error);
-        //     console.log(error+"error in new Trade");
-        //     });
+                // }else{
+                //     alert('Server Issue, Try Again after some Time')
+                // }                   
+            })
+            .catch((error) => {
+            console.log(error);
+            console.log(error+"error in new Trade");
+            });
             
       }
   
     render() {
+      console.log('name is',this.props.params.name)
+      console.log('cred id is',this.props.params.CredDefId)
       // let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
       console.log('hi');
         return (
@@ -82,6 +89,7 @@ export default class BirthCertificate extends React.Component {
       inputStyle={{color:"black"}}
       floatingLabelStyle={{color:"black"}}
       hintText="Name of applicant"
+      value={this.state.name}
       onChange = {(event,newValue) => this.setState({name:newValue})}
       floatingLabelText="Name"
       fullWidth={true}
@@ -92,6 +100,7 @@ export default class BirthCertificate extends React.Component {
       inputStyle={{color:"black"}}
       floatingLabelStyle={{color:"black"}}
       hintText="Father's name"
+      value={this.state.fatherName}
       onChange = {(event,newValue) => this.setState({fatherName:newValue})}
       floatingLabelText="Father's Name"
       fullWidth={true}
@@ -102,6 +111,7 @@ export default class BirthCertificate extends React.Component {
       inputStyle={{color:"black"}}
       floatingLabelStyle={{color:"black"}}
       hintText="Mother's Name"
+      value={this.state.motherName}
       onChange = {(event,newValue) => this.setState({motherName:newValue})}
       floatingLabelText="Mother's Name"
       fullWidth={true}
@@ -112,6 +122,7 @@ export default class BirthCertificate extends React.Component {
       inputStyle={{color:"black"}}
       floatingLabelStyle={{color:"black"}}
       hintText="Address"
+      value={this.state.address}
       onChange = {(event,newValue) => this.setState({address:newValue})}
       floatingLabelText="Address"
       fullWidth={true}
@@ -122,6 +133,7 @@ export default class BirthCertificate extends React.Component {
       inputStyle={{color:"black"}}
       floatingLabelStyle={{color:"black"}}
       hintText="Place of Birth"
+      value={this.state.POB}
       onChange = {(event,newValue) => this.setState({POB:newValue})}
       floatingLabelText="POB"
       fullWidth={true}
@@ -148,7 +160,7 @@ export default class BirthCertificate extends React.Component {
       inputStyle={{color:"black"}}
       floatingLabelStyle={{color:"black"}}
       hintText="Date of Birth"
-      value={this.state.date}
+      
       onChange={this.handleChange}
       fullWidth={true}
       />

@@ -8,8 +8,8 @@ export default class EachTAPendingServiceDetail extends React.Component{
         }
       }
     
-    approve=()=>{
-        this.context.router.push(this.props.data.uiRoutes)
+    approve=(name)=>{
+        this.context.router.push(this.props.data.uiRoutes+'/'+name+'/'+this.props.data.CredDefId);
     }
    
     render(){

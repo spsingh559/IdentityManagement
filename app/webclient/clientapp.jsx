@@ -48,7 +48,7 @@ ReactDOM.render(
 	<Route path="/myServices" component={MyServices} />
 	<Route path="/requestSchema" component={RequestSchema} />
 	<Route path="/createService" component={CreateService} />
-	<Route path="/birthcertifcate" component={BirthCertificate} />
+	<Route path="/birthcertificate/:name/:CredDefId" component={BirthCertificate} />
 	<Route path="/myProfileEntity" component={ProfileEntity} />
 		<IndexRoute component={Home} />
 		</Route>

@@ -11,7 +11,8 @@ import Draft from 'material-ui/svg-icons/content/create';
 import Inbox from 'material-ui/svg-icons/content/inbox';
 import Pending from 'material-ui/svg-icons/content/report';
 import {Tabs, Tab} from 'material-ui/Tabs';
-
+import MenuItem from 'material-ui/MenuItem';
+import SelectField from 'material-ui/SelectField';
 import TAPendingServiceDetail from './TAPendingServiceDetail';
 export default class CreateService extends React.Component{
 
@@ -19,7 +20,9 @@ export default class CreateService extends React.Component{
         serviceName:'',
         serviceDescription:'',
         open:false,
-        serviceData:[]
+        serviceData:[],
+        value:'',
+        arr:[]
     }
 
     componentDidMount=()=>{
@@ -33,7 +36,7 @@ export default class CreateService extends React.Component{
           console.log('--------------result of get Service----------------');
           console.log(data)
           if(data.data.data.length==0){
-              alert('no service available !!')
+              console.log('no service available !!')
           }else{
               this.setState({serviceData:data.data.data})
           }
@@ -42,8 +45,28 @@ export default class CreateService extends React.Component{
         .catch((err)=>{
           console.log(err,'Try again Error in fetching record in Services')
         })
+
+        Axios({
+          method:'get',
+          url:restUrl+'/api/schemaStatus',
+        })
+        .then((data) => {
+          console.log('--------------result of did----------------');
+          console.log(data)
+          // this.setState({schemaCount:data.data.data.length})
+        //  this.state.arr=[];
+         var self =this;
+          data.data.data.forEach((data)=>{
+            this.state.arr.push(<MenuItem value={data.schemaId} key={data.schemaId} primaryText={data.schemaName} />)
+          })
+        })
+        .catch((err)=>{
+          alert('Try again Error in fetching record for schema')
+        })
     
   }
+
+  handleChangeRole=(event, index, value) => this.setState({value:value});
 
     submitService=()=>{
       let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
@@ -58,6 +81,7 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
             apiUrl:'/api/get'+this.state.serviceName.toLowerCase(),
             uiRoutes:'/'+this.state.serviceName.toLowerCase(),
             serviceStatus:'Active',
+            schemaId:this.state.value,
             list:[],
             timeStamp:latestDate
         }
@@ -126,6 +150,19 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
       onChange = {(event,newValue) => this.setState({serviceDescription:newValue})}
     />
     <br />
+    <SelectField 
+           hintStyle={{color:"white"}}
+           inputStyle={{color:"white"}}
+           floatingLabelStyle={{color:"white"}}
+           hintText="Select Schema ID"
+          floatingLabelText="List of Schema ID"
+          value={this.state.value}
+          onChange={this.handleChangeRole}
+          fullWidth={true}
+        >
+         {this.state.arr}
+        </SelectField>
+        <br />
     <center>
         <RaisedButton
       label="Submit"

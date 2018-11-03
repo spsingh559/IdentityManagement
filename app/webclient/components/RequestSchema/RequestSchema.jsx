@@ -52,7 +52,7 @@ export default class RequestSchema extends React.Component {
       let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
       Axios({
         method:'get',
-        url:restUrl+'/api/schemaStatus/'+retrievedUserDetails.name,
+        url:restUrl+'/api/schemaStatus',
       })
       .then((data) => {
         console.log('--------------result of did----------------');
@@ -60,12 +60,12 @@ export default class RequestSchema extends React.Component {
         // this.setState({schemaCount:data.data.data.length})
       //  this.state.arr=[];
        var self =this;
-       newArr=[];
+      
         data.data.data.forEach((data)=>{
           this.state.arr.push(<MenuItem value={data.schemaId} key={data.schemaId} primaryText={data.schemaName} />)
         })
         console.log('newArr')
-        console.log(newArr);
+       
       })
       .catch((err)=>{
         alert('Try again Error in fetching record for schema')

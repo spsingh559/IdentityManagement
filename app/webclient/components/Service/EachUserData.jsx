@@ -9,7 +9,7 @@ import {Col, Row, Grid,Image} from 'react-bootstrap';
 export default class EachTAPendingServiceDetail extends React.Component{
 
     approve=()=>{
-        this.props.approve();
+        this.props.approve(this.props.data.name);
     }
    
     render(){

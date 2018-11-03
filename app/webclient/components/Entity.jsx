@@ -59,7 +59,7 @@ export default class Entity extends React.Component {
 
     Axios({
       method:'get',
-      url:restUrl+'/api/schemaStatus/'+retrievedUserDetails.name,
+      url:restUrl+'/api/schemaStatus',
     })
     .then((data) => {
       console.log('--------------result of did----------------');

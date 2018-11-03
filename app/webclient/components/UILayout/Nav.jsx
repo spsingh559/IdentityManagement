@@ -182,7 +182,7 @@ export default class Nav extends React.Component{
                         </MenuItem>
 
                         <MenuItem onTouchTap={this.handleClose}>
-                         <Link to="/reqSchema"> Request Schema </Link>
+                         <Link to="/requestSchema"> Request Schema </Link>
                         </MenuItem>
 
                         <MenuItem onTouchTap={this.handleClose}>

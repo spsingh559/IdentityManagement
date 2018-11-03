@@ -71,7 +71,7 @@ export default class Registration extends React.Component{
                 if(data.data=="success"){
                     alert('Registration Successful');
                     this.context.router.push('/login');
-
+                    // this.createCertificateWallet();
                 }else{
                     alert('Server Issue, Try Again after some Time')
                 }                   
@@ -82,6 +82,28 @@ export default class Registration extends React.Component{
             });
             
       }
+
+      // createCertificateWallet=()=>{
+      //   Axios({
+      //     method:'post',
+      //     url:restUrl+'/api/registration',
+      //     data:obj
+      //     })
+      //     .then((data) => {
+      //         console.log(data);
+      //         if(data.data=="success"){
+      //             console.log('certificate wallet created Successful');
+                 
+                 
+      //         }else{
+      //             alert('Server Issue, Try Again after some Time')
+      //         }                   
+      //     })
+      //     .catch((error) => {
+      //     console.log(error);
+      //     console.log(error+"error in new Trade");
+      //     });
+      // }
 
       
 

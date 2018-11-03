@@ -9,8 +9,8 @@ export default class UserData extends React.Component{
     //     this.props.getNow(_id,obj)
     // }
    
-    approve=()=>{
-        this.props.approve()
+    approve=(name)=>{
+        this.props.approve(name)
     }
     render(){
         console.log('data in UserData is a');
