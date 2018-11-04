@@ -38,13 +38,13 @@ export default class BirthCertificate extends React.Component {
             _id:Date.now(),
             certificateData:{
               name:this.state.name,
-            address:this.state.address,
-            fatherName:this.state.fatherName,
-            motherName:this.state.motherName,
-            DOB:this.state.dob,
-            POB:this.state.POB,
-            time:this.state.time,
-            gender:this.state.gender,
+              fatherName:this.state.fatherName,
+              motherName:this.state.motherName,
+              gender:this.state.gender,
+              dateOfBirth:this.state.dob,
+              placeOfBirth:this.state.POB,
+              timeOfBirth:this.state.time,
+            address:this.state.address           
             },            
             CredDefId:this.props.params.CredDefId,
             issuer:retrievedUserDetails.name
@@ -58,13 +58,12 @@ export default class BirthCertificate extends React.Component {
             })
             .then((data) => {
                 console.log(data);
-                // if(data.data=="success"){
-                //     this.setState({birthData:obj});
-                //    this.setState({open:true})
+                if(data.data=="success"){
+                   alert('Birth Certificate is issued to'+ obj.certificateData.name);
 
-                // }else{
-                //     alert('Server Issue, Try Again after some Time')
-                // }                   
+                }else{
+                    alert('Server Issue, Try Again after some Time')
+                }                   
             })
             .catch((error) => {
             console.log(error);

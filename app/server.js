@@ -249,7 +249,8 @@ Wallet = await indy.openWallet(WalletConfig, WalletCredentials);
             let schemaObj={
                 _id:Date.now(),
                 CredDefId:CredDefId,
-                name:obj.name
+                name:obj.name,
+                schemaId:obj.schemaId
             };
             console.log('schema cred obj is', schemaObj);
             dbo.collection("credential").insertOne(schemaObj, function(err, result) {
@@ -386,34 +387,42 @@ app.patch('/api/updateServices/', function(req,res){
 
 app.post('/api/birthCertificate', function(req,response){
     console.log('api birthCertificate');
-    console.log(req.body);
+    // console.log(req.body);
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("sovrinDB");
         var query = { owner: req.body.issuer};
         dbo.collection("DID").find(query).toArray(function(err, result) {
     if (err) throw err;
-    // console.log(result);
-    birthCertificate(result[result.length-1].did)
-    // this.createSchemaCred(req.body,result[result.length-1].did,res);
+   
+    birthCertificate(result[result.length-1].did);
+    // This code was written to verify schema
+    // TAbbFxAje8szAH2tCLs2FA
+    // run();
+    // async function run(){
+    // [, schema] = await getSchema(poolHandle, result[result.length-1].did, "TAbbFxAje8szAH2tCLs2FA:2:BirthCertificate:0.1");
+    // console.log('schema for Birthcertificate', schema)
+    // }
+    // Code end to verfiy Schema
     db.close();
   })
 
 
 })
-    // birthCertificate(did);
+    
     async function birthCertificate(did){
     let WalletConfig = {'id': req.body.certificateData.name+"Wallet"}
     let WalletCredentials = {'key': req.body.certificateData.name+"_key"}
     //-----------this piece of code is written to make it dynamic, task is to make wallet status null when wallet for user does not exist and pass wallet name when it exist.
-    // await indy.deleteWallet(WalletConfig, WalletCredentials);
+    //  await indy.deleteWallet(WalletConfig, WalletCredentials);
+    //  console.log('wallet deleted');
     let Wallet;
     let flag=true;
     try{
         Wallet = await indy.openWallet(WalletConfig, WalletCredentials);
     } catch(error){
         flag=false;
-        console.log('inside catch block for birthCertificate---------------------------------')
+        // console.log('inside catch block for birthCertificate---------------------------------')
         console.error(error)
     }
     
@@ -425,97 +434,115 @@ if(!flag){
     console.log("use existing wallet");
     walletStatus=req.body.certificateData.name+"Wallet"
 }
-// await indy.closeWallet(Wallet);
-this.createBirthCertificate(req.body,did,walletStatus,WalletConfig,WalletCredentials);
-// this.createBirthCertificate(req.body,did,WalletConfig,WalletCredentials);
+this.createBirthCertificate(req.body,did,walletStatus,WalletConfig,WalletCredentials,response);
 
 
     }
 })
 
-createBirthCertificate=(obj,did,walletStatus,WalletConfig,WalletCredentials)=>{
+createBirthCertificate=(obj,did,walletStatus,WalletConfig,WalletCredentials,response)=>{
 genrateBC();
 async function genrateBC(){
-    console.log('inside genrateBC ---------------------------')
+    // console.log('inside genrateBC ---------------------------')
     let TAWalletConfig = {'id': obj.issuer+"Wallet"}
     let TAWalletCredentials = {'key': obj.issuer+"_key"}
 let Wallet = await indy.openWallet(TAWalletConfig, TAWalletCredentials);
-    console.log('Faber wallet is', Wallet)
+    // console.log('Faber wallet is', Wallet)
     let [aliceWallet, faberAliceKey, aliceFaberDid, aliceFaberKey, faberAliceConnectionResponse] = await onboarding(poolHandle, obj.issuer, Wallet, did, obj.certificateData.name, walletStatus, WalletConfig, WalletCredentials);
-    console.log("aliceWallet",aliceWallet);
-    console.log("faberAliceKey",faberAliceKey);
-    console.log("aliceFaberDid",aliceFaberDid);
-    console.log("aliceFaberKey",aliceFaberKey);
-    console.log("faberAliceConnectionResponse",faberAliceConnectionResponse);
+    // console.log("aliceWallet",aliceWallet);
+    // console.log("faberAliceKey",faberAliceKey);
+    // console.log("aliceFaberDid",aliceFaberDid);
+    // console.log("aliceFaberKey",aliceFaberKey);
+    // console.log("faberAliceConnectionResponse",faberAliceConnectionResponse);
 
     console.log("==============================");
-    console.log("== Getting Birth Certificate and  Getting Transcript Credential ==");
+    console.log("== Getting BirthCertificate Credential ==");
     console.log("------------------------------");
 
 
-    console.log(obj.issuer+"-> Create \"Transcript\" Credential Offer for Alice");
+    console.log(obj.issuer+"-> Create \"BirthCertificate\" Credential Offer for "+obj.certificateData.name);
     let transcriptCredOfferJson = await indy.issuerCreateCredentialOffer(Wallet, obj.CredDefId);
 
-    console.log("\"Faber\" -> Get key for Alice did");
+    console.log(obj.issuer+" -> Get key for "+obj.certificateData.name+" did");
     let aliceFaberVerkey = await indy.keyForDid(poolHandle, Wallet, faberAliceConnectionResponse['did']);
 
-    console.log("\"Faber\" -> Authcrypt \"Transcript\" Credential Offer for Alice");
+    console.log(obj.issuer+" -> Authcrypt \"BirthCertificate\" Credential Offer for "+obj.certificateData.name);
     let authcryptedTranscriptCredOffer = await indy.cryptoAuthCrypt(Wallet, faberAliceKey, aliceFaberVerkey, Buffer.from(JSON.stringify(transcriptCredOfferJson),'utf8'));
 
-    console.log("\"Faber\" -> Send authcrypted \"Transcript\" Credential Offer to Alice");
+    console.log(obj.issuer+" -> Send authcrypted \"BirthCertificate\" Credential Offer to "+ obj.certificateData.name);
 
-    console.log("\"Alice\" -> Authdecrypted \"Transcript\" Credential Offer from Faber");
+    console.log(obj.certificateData.name+" -> Authdecrypted \"Transcript\" Credential Offer from "+obj.issuer);
     let [faberAliceVerkey, authdecryptedTranscriptCredOfferJson, authdecryptedTranscriptCredOffer] = await authDecrypt(aliceWallet, aliceFaberKey, authcryptedTranscriptCredOffer);
 
-    console.log("\"Alice\" -> Create and store \"Alice\" Master Secret in Wallet");
+    console.log(obj.certificateData.name+" -> Create and store Master Secret in Wallet");
     let aliceMasterSecretId = await indy.proverCreateMasterSecret(aliceWallet, null);
 
-    console.log("\"Alice\" -> Get \"Faber Transcript\" Credential Definition from Ledger");
+    console.log(obj.certificateData.name+" -> Get "+obj.issuer+" BirthCerticate Credential Definition from Ledger");
     let faberTranscriptCredDef;
     [faberTranscriptCredDefId, faberTranscriptCredDef] = await getCredDef(poolHandle, aliceFaberDid, authdecryptedTranscriptCredOffer['cred_def_id']);
 
-    console.log("\"Alice\" -> Create \"Transcript\" Credential Request for Faber");
+    console.log(obj.certificateData.name+" -> Create \"Birth Certificate\" Credential Request for "+ obj.issuer);
     let [transcriptCredRequestJson, transcriptCredRequestMetadataJson] = await indy.proverCreateCredentialReq(aliceWallet, aliceFaberDid, authdecryptedTranscriptCredOfferJson, faberTranscriptCredDef, aliceMasterSecretId);
 
-    console.log("\"Alice\" -> Authcrypt \"Transcript\" Credential Request for Faber");
+    console.log(obj.certificateData.name+" -> Authcrypt \"BirthCertificate\" Credential Request for "+obj.issuer);
     let authcryptedTranscriptCredRequest = await indy.cryptoAuthCrypt(aliceWallet, aliceFaberKey, faberAliceVerkey, Buffer.from(JSON.stringify(transcriptCredRequestJson),'utf8'));
 
-    console.log("\"Alice\" -> Send authcrypted \"Transcript\" Credential Request to Faber");
+    console.log(obj.certificateData.name+" -> Send authcrypted \"BirthCertificate\" Credential Request to "+ obj.issuer);
 
-    console.log("\"Faber\" -> Authdecrypt \"Transcript\" Credential Request from Alice");
+    console.log(obj.issuer+" -> Authdecrypt \"BirthCertificate\" Credential Request from "+ obj.certificateData.name);
     let authdecryptedTranscriptCredRequestJson;
     [aliceFaberVerkey, authdecryptedTranscriptCredRequestJson] = await authDecrypt(Wallet, faberAliceKey, authcryptedTranscriptCredRequest);
 
-    console.log("\"Faber\" -> Create \"Transcript\" Credential for Alice");
+    console.log(obj.issuer+" -> Create \"BirthCertificate\" Credential for "+ obj.certificateData.name);
     // note that encoding is not standardized by Indy except that 32-bit integers are encoded as themselves. IS-786
-    // let transcriptCredValues = {
-    //     "name": {"raw": obj.certificateData.name, "encoded": "1139481716457488690172217916278103335"},
-    //     "fatherName": {"raw": obj.certificateData.fatherName, "encoded": "5321642780241790123587902456789123452"},
-    //     "motherName": {"raw": obj.certificateData.motherName, "encoded": "2213454313412354"},
-    //     "gender": {"raw": obj.certificateData.gender, "encoded": "12434523576212321"},
-
-    //     "address":{"raw": obj.certificateData.address, "encoded": "124345235762123215436"},
-    //     DOB:this.state.dob,
-    //     POB:this.state.POB,
-    //     time:this.state.time,
-    //     gender:this.state.gender,
-    // };
+    let transcriptCredValues = {
+        "name": {"raw": obj.certificateData.name, "encoded": "1139481716457488690172217916278103335"},
+        "fatherName": {"raw": obj.certificateData.fatherName, "encoded": "5321642780241790123587902456789123452"},
+        "motherName": {"raw": obj.certificateData.motherName, "encoded": "2213454313412354"},
+        "gender": {"raw": obj.certificateData.gender, "encoded": "12434523576212321"},  
+        "dateOfBirth":{"raw": obj.certificateData.dateOfBirth, "encoded": "124345235762123213"},  
+        "placeOfBirth":{"raw": obj.certificateData.placeOfBirth, "encoded": "124345235762123214"}, 
+        "timeOfBirth":{"raw": obj.certificateData.timeOfBirth, "encoded": "124345235762123215"}, 
+        "address":{"raw": obj.certificateData.address, "encoded": "1243452357621232154366"}
+    };
 
     let [transcriptCredJson] = await indy.issuerCreateCredential(Wallet, transcriptCredOfferJson, authdecryptedTranscriptCredRequestJson, transcriptCredValues, null, -1);
 
-    console.log("\"Faber\" -> Authcrypt \"Transcript\" Credential for Alice");
+    console.log(obj.issuer+" -> Authcrypt \"BirthCertificate\" Credential for "+ obj.certificateData.name);
     let authcryptedTranscriptCredJson = await indy.cryptoAuthCrypt(Wallet, faberAliceKey, aliceFaberVerkey, Buffer.from(JSON.stringify(transcriptCredJson),'utf8'));
 
-    console.log("\"Faber\" -> Send authcrypted \"Transcript\" Credential to Alice");
+    console.log(obj.issuer+" -> Send authcrypted \"BirthCertificate\" Credential to "+ obj.certificateData.name);
 
-    console.log("\"Alice\" -> Authdecrypted \"Transcript\" Credential from Faber");
+    console.log(obj.certificateData.name+" -> Authdecrypted \"BirthCertificate\" Credential from "+ obj.issuer);
     let [, authdecryptedTranscriptCredJson] = await authDecrypt(aliceWallet, aliceFaberKey, authcryptedTranscriptCredJson);
 
-    console.log("\"Alice\" -> Store \"Transcript\" Credential from Faber");
+    console.log(obj.certificateData.name+" -> Store \"Transcript\" Credential from "+ obj.issuer);
     await indy.proverStoreCredential(aliceWallet, null, transcriptCredRequestMetadataJson,
         authdecryptedTranscriptCredJson, faberTranscriptCredDef, null);
 
 await indy.closeWallet(Wallet);
+
+var monthName=["Jan", "Feb","March","April","May","Jun","July","Aug","Sept","Oct","Nov","Dec"];
+var date=new Date();
+var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYear()+" "+ date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+let certificateObj={
+    certificateName:"BirthCertificate",
+    issuedBy:obj.issuer,
+    issuedTo:obj.certificateData.name,
+    issuedToDID:aliceFaberDid,
+    issuedByDID:did,
+    time:latestDate
+}
+MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("sovrinDB");
+    dbo.collection("certificate").insertOne(certificateObj, function(err, res) {
+      if (err) throw err;
+      console.log("1 document inserted");
+      response.send("success");
+    });
+  });
+
 }
 
 }
