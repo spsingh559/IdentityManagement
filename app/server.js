@@ -420,6 +420,7 @@ app.post('/api/birthCertificate', function(req,response){
     let flag=true;
     try{
         Wallet = await indy.openWallet(WalletConfig, WalletCredentials);
+        await indy.closeWallet(Wallet);
     } catch(error){
         flag=false;
         // console.log('inside catch block for birthCertificate---------------------------------')
@@ -569,6 +570,29 @@ db.close();
 
 // -----------****************************************************Create Certificate to User End****************************--------------------------------------------
 
+// -------------------------Get certificate by Owner---------------------------------------
+
+app.get('/api/getCertificateByUser/:name', function(req,res){
+    console.log('api request for getCertificateByUser');
+    console.log('_id receivvedd is', req.params.name);
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+        // var myobj = { name: "Company Inc", address: "Highway 37" };
+        
+        // var query = { _id: req.params._id };
+//   dbo.collection("certificate").findOne({issuedTo:req.params.name},function(err, result) {
+    dbo.collection("certificate").find({issuedTo:req.params.name}).toArray(function(err, result) {
+    if (err) throw err;
+    // console.log(result);
+    res.send({data:result})
+    db.close();
+  })
+})
+
+});
+
+// -------------------------Get certificate by Owner End---------------------------------------
 
 app.post('/api/registration', function(req,response){
     console.log('api registration');

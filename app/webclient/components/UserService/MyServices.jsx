@@ -10,15 +10,18 @@ import Pending from 'material-ui/svg-icons/content/report';
 import ShowServiceDetail from './ShowServiceDetail';
 import PendingServiceDetail from './PendingServiceDetail';
 import Snackbar from 'material-ui/Snackbar';
+
+import ApproveCertificate from './ApproveCertificate';
 export default class MyServices extends React.Component{
 
     state={
         serviceData:[],
-        open:false
+        open:false,
+        certificateData:[]
     }
 
     componentDidMount=()=>{
-        // let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+        let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
         // console.log(retrievedUserDetails);
         Axios({
             method:'get',
@@ -28,7 +31,7 @@ export default class MyServices extends React.Component{
             console.log('--------------result of get Service----------------');
             console.log(data)
             if(data.data.data.length==0){
-                alert('no service available !!')
+                console.log('no service available !!')
             }else{
                 this.setState({serviceData:data.data.data})
             }
@@ -36,6 +39,24 @@ export default class MyServices extends React.Component{
           })
           .catch((err)=>{
             alert('Try again Error in fetching record in Services')
+          })
+
+          Axios({
+            method:'get',
+            url:restUrl+'/api/getCertificateByUser/'+retrievedUserDetails.name,
+          })
+          .then((data) => {
+            console.log('--------------result of get Certificate----------------');
+            console.log(data)
+            if(data.data.data.length==0){
+                console.log('no service available !!')
+            }else{
+                this.setState({certificateData:data.data.data})
+            }
+            // this.setState({onboardingStatus:data.data.data.onboardingStatus})
+          })
+          .catch((err)=>{
+            alert('Try again Error in fetching record in Certificates')
           })
       
     }
@@ -107,7 +128,13 @@ export default class MyServices extends React.Component{
     <Tab
       icon={<Inbox />}
       label="Issued"
-    />
+    >
+     <Grid>
+    <Col xs={12}>
+    <ApproveCertificate data={this.state.certificateData} />
+    </Col>
+    </Grid>
+    </Tab>
     
   </Tabs>
   <Snackbar

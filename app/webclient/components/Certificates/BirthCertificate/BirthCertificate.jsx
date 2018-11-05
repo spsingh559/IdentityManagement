@@ -68,13 +68,31 @@ export default class BirthCertificate extends React.Component {
         }
 
         let count=0;
-          this.state.serviceData.forEach((data,i)=>{
-              if(data._id==this.props.params.serviceId){
-                count=i;
-                var editData=data.list.splice(i,1,objList);
-                editData=null;
-              }
-          })
+          // this.state.serviceData.forEach((data,i)=>{
+          //     if(data._id==this.props.params.serviceId){
+          //       count=i;
+          //       data.list.forEach((data,i)=>{
+          //         if(data.name==this.state.name){
+          //           var editData=data.splice(i,1,objList);
+          //           editData=null;
+          //         }
+          //       })
+                
+          //     }
+          // })
+          this.state.serviceData.forEach((datas,i)=>{
+            if(datas._id==this.props.params.serviceId){
+              count=i;
+                datas.list.forEach((data,i)=>{
+                    if(data.name==this.state.name){
+                    
+                        var editData=datas.list.splice(i,1,objList);
+                        // console.log('editData', editData)
+                        editData=null;
+                      }
+                })
+            }
+        })
           // console.log('updated service list is', this.state.serviceData);
         let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
         let obj={

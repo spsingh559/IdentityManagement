@@ -115,7 +115,7 @@ export default class Nav extends React.Component{
         <Image src="../../images/userIcon.png" 
         style={{width:'100px',height:'100px'}} circle/>
         </center>
-        <center style={{fontWeight:'bold',fontSize:16}}>Hello Alice</center>
+        <center style={{fontWeight:'bold',fontSize:16}}>Hello {retrievedUserDetails.name}</center>
         <Divider />
           <MenuItem onTouchTap={this.handleClose}>
            <Link to="/"> Home </Link>
