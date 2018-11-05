@@ -24,15 +24,58 @@ export default class BirthCertificate extends React.Component {
         dob:"",
         POB:"",
         time:"",
-        gender:""
+        gender:"",
+        serviceData:[]
        }
+
+       static get contextTypes() {
+        return {
+          router: React.PropTypes.object.isRequired
+        }
+      }
  
       handleChange = (event, date) => { this.setState({ dob: date });};
       handleGenderChange = (event, index, gender) => this.setState({gender});
       handleClose = () => this.setState({openDrawer: false});
       handleToggle = () => this.setState({openDrawer: !this.state.openDrawer});
 
+      componentDidMount=()=>{
+        let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+
+        Axios({
+          method:'get',
+          url:restUrl+'/api/getServicesForOwner/'+retrievedUserDetails.name,
+          })
+          .then((data) => {
+              console.log(data);
+              if(data.data.data.length==0){
+                console.log('no service available !!')
+            }else{
+                this.setState({serviceData:data.data.data})
+            }               
+          })
+          .catch((error) => {
+          console.log(error);
+          console.log(error+"error in new Trade");
+          });
+      }
+
       applyBirthCert=()=>{
+        let arr=[];
+        let objList={
+          name:this.state.name,
+          status:"I"
+        }
+
+        let count=0;
+          this.state.serviceData.forEach((data,i)=>{
+              if(data._id==this.props.params.serviceId){
+                count=i;
+                var editData=data.list.splice(i,1,objList);
+                editData=null;
+              }
+          })
+          // console.log('updated service list is', this.state.serviceData);
         let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
         let obj={
             _id:Date.now(),
@@ -47,7 +90,9 @@ export default class BirthCertificate extends React.Component {
             address:this.state.address           
             },            
             CredDefId:this.props.params.CredDefId,
-            issuer:retrievedUserDetails.name
+            issuer:retrievedUserDetails.name,
+            serviceId:this.props.params.serviceId,
+            list:this.state.serviceData[count].list
         }
        console.log('obj is');
         console.log(obj);
@@ -60,7 +105,7 @@ export default class BirthCertificate extends React.Component {
                 console.log(data);
                 if(data.data=="success"){
                    alert('Birth Certificate is issued to'+ obj.certificateData.name);
-
+                   this.context.router.push('/entity');
                 }else{
                     alert('Server Issue, Try Again after some Time')
                 }                   

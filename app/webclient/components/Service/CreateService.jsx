@@ -14,6 +14,8 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import TAPendingServiceDetail from './TAPendingServiceDetail';
+import TAApproveServiceDetail from './TAApproveServiceDetail';
+
 export default class CreateService extends React.Component{
 
     state={
@@ -194,7 +196,13 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
     <Tab
       icon={<Inbox />}
       label="Approved"
-    />
+    >
+    <Grid>
+    <Col xs={12}>
+    <TAApproveServiceDetail  data={this.state.serviceData}/>
+    </Col>
+    </Grid>
+    </Tab>
     
   </Tabs>
          

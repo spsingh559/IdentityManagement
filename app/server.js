@@ -526,6 +526,7 @@ var monthName=["Jan", "Feb","March","April","May","Jun","July","Aug","Sept","Oct
 var date=new Date();
 var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYear()+" "+ date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
 let certificateObj={
+    _id:Date.now(),
     certificateName:"BirthCertificate",
     issuedBy:obj.issuer,
     issuedTo:obj.certificateData.name,
@@ -542,8 +543,27 @@ MongoClient.connect(url, function(err, db) {
       response.send("success");
     });
   });
+console.log('list reached to server is', obj.list);
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("sovrinDB");        
+    var query = {_id: parseInt(obj.serviceId)};
+var newvalues = { $set: {list: obj.list } };
+dbo.collection("createService").updateOne(query,newvalues,function(err, result) {
+if (err) throw err;
+console.log('result for createService has been updated');
+// console.log(result);
+// res.send("success")
+db.close();
+})
+
+
+})
+
 
 }
+
+
 
 }
 

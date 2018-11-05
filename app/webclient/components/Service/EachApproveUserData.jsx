@@ -14,12 +14,13 @@ export default class EachTAPendingServiceDetail extends React.Component{
    
     render(){
 
-        
+        console.log('data reached to EachApprove');
+        console.log(this.props.data);
 
         // reject=()=>{
         //     alert('reject')
         // }
-        if(this.props.data.status!="P"){
+        if(this.props.data.status!="I"){
             return null;
         }else{
         
@@ -28,20 +29,8 @@ export default class EachTAPendingServiceDetail extends React.Component{
 <tr>
       <td>{this.props.i}</td>
       <td>{this.props.data.name}</td>
-      <td>{this.props.data.status=="P"?"Pending":null}</td>
-      <td>
-         
-          <IconButton >
-      {/* <Approve onTouchTap={this.approve}/> */}
-      <Approve onTouchTap={this.approve}/>
-    </IconButton>
-        </td>
-
-          <td>
-          <IconButton >
-      <Delete />
-    </IconButton>
-    </td>
+      <td>{this.props.data.status=="I"?"Approved":null}</td>
+      <td>      {this.props.timeStamp}    </td>
      
      
     </tr>
