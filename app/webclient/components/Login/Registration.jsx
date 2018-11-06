@@ -51,6 +51,9 @@ export default class Registration extends React.Component{
 
     registerSuccess=()=>{
         // alert("registerSuccess");
+
+        // accessLevel A=> Allowed, R => Restricted
+        // for Brent change in DB only as R
         let obj={
       _id:Date.now(),
       name:this.state.name,
@@ -58,6 +61,7 @@ export default class Registration extends React.Component{
        emailID:this.state.emailID,
        role:this.state.role,
        pwd:this.state.pwd,
+       accessLevel:"A"
         }
        
         console.log(obj);

@@ -177,13 +177,15 @@ export default class Nav extends React.Component{
                          <Link to="/onboarding"> Onboarding </Link>
                         </MenuItem>
 
+                            {retrievedUserDetails.accessLevel=="A" && retrievedUserDetails.role=="TA"?null:
                          <MenuItem onTouchTap={this.handleClose}>
                          <Link to="/createSchema"> CreateSchema </Link>
                         </MenuItem>
-
+                            }
                         <MenuItem onTouchTap={this.handleClose}>
                          <Link to="/requestSchema"> Request Schema </Link>
                         </MenuItem>
+                        
 
                         <MenuItem onTouchTap={this.handleClose}>
                          <Link to="/entityDID"> Manage DID </Link>

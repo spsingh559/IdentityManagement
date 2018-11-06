@@ -679,7 +679,8 @@ app.post('/api/login', function(req,response){
             response:"Succes",
             name:result[0].name,
             role:result[0].role,
-            _id:result[0]._id
+            _id:result[0]._id,
+            accessLevel:result[0].accessLevel
         });
     }else{
         console.log('pass not match')

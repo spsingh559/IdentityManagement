@@ -21,7 +21,7 @@ export default class EachApproveCertificate extends React.Component{
         
        
         <CardText expandable={true}>
-         This certificate is issued to <b>{this.props.data.issuedTo+" "} </b>( DID : {+" "+ this.props.data.issuedToDID} ) by 
+         This certificate is issued to <b>{this.props.data.issuedTo+" "} </b>( DID : {" "+ this.props.data.issuedToDID} ) by 
          <b>{" " +this.props.data.issuedBy +" "} </b> (DID : {" "+this.props.data.issuedByDID} ) on <b>{" "+ this.props.data.time} </b> and Certificate Number is<b> {" " +this.props.data._id}</b>
         </CardText>
         <CardActions>

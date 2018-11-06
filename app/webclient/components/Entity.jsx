@@ -95,7 +95,7 @@ export default class Entity extends React.Component {
   
   render() {
 
-    // let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+    let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
     
       
       return (
@@ -142,7 +142,8 @@ export default class Entity extends React.Component {
               
             </center>
                </Col>
-
+{retrievedUserDetails.accessLevel=="A" && retrievedUserDetails.role=="TA"?null:
+<div>
                <Col xs={6} style={{background:"white", height:"100px",marginTop:"20px"}}>
               <center>
            <h3 style={{marginTop:"30px"}}>Create Schema</h3>
@@ -160,7 +161,8 @@ export default class Entity extends React.Component {
                {/* <span> Add More</span> */}
             </center>
                </Col>
-  
+               </div>
+}
                <Col xs={6} style={{background:"white", height:"100px",marginTop:"20px"}}>
               <center>
            <h3 style={{marginTop:"30px"}}>Schema Credential</h3>

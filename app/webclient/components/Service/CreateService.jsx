@@ -13,8 +13,10 @@ import Pending from 'material-ui/svg-icons/content/report';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
+import Checkbox from 'material-ui/Checkbox';
 import TAPendingServiceDetail from './TAPendingServiceDetail';
 import TAApproveServiceDetail from './TAApproveServiceDetail';
+
 
 export default class CreateService extends React.Component{
 
@@ -117,7 +119,13 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
         });
       };
 
+     
+    
+     
+
     render(){
+
+     
 
         return(
             <div style={{marginTop:"90px",minHeight:"600px"}} className="homeBackground">
@@ -185,7 +193,7 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
       </Tab>
       <Tab
       icon={<Pending />}
-      label="Pending"
+      label="Await Approval"
     >
     <Grid>
     <Col xs={12}>
@@ -205,7 +213,6 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
     </Tab>
     
   </Tabs>
-         
              </div>
         )
     }
