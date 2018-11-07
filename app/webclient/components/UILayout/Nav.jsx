@@ -140,7 +140,7 @@ export default class Nav extends React.Component{
                   return(
                     <div>
                      <AppBar
-                           title="MyIdenity-Entity"
+                           title="Brent eGov"
                           
                            onLeftIconButtonTouchTap={this.handleToggle}
                            style={{position: "fixed",top:'0'}}
@@ -180,6 +180,13 @@ export default class Nav extends React.Component{
                             {retrievedUserDetails.accessLevel=="A" && retrievedUserDetails.role=="TA"?null:
                          <MenuItem onTouchTap={this.handleClose}>
                          <Link to="/createSchema"> CreateSchema </Link>
+                        </MenuItem>
+                            }
+
+
+                            {retrievedUserDetails.accessLevel=="A" && retrievedUserDetails.role=="TA"?null:
+                         <MenuItem onTouchTap={this.handleClose}>
+                         <Link to="/brentServices"> Service Regulation</Link>
                         </MenuItem>
                             }
                         <MenuItem onTouchTap={this.handleClose}>

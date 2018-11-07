@@ -26,6 +26,7 @@ import CreateService from './components/Service/CreateService';
 import MyServices from './components/UserService/MyServices';
 import RequestSchema from './components/RequestSchema/RequestSchema';
 import Registration from './components/Login/Registration';
+import  BrentServices from './components/BrentServices/BrentCreateService';
 
 // All Certificate list-----------------------
 // ji
@@ -45,6 +46,7 @@ ReactDOM.render(
 	<Route path="/myProfile" component={Profile} />
 	<Route path="/onboarding" component={Onboarding} />
 	<Route path="/createSchema" component={CreateSchema} />
+	<Route path="/brentServices" component={BrentServices} />
 	<Route path="/myServices" component={MyServices} />
 	<Route path="/requestSchema" component={RequestSchema} />
 	<Route path="/createService" component={CreateService} />

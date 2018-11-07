@@ -561,6 +561,24 @@ db.close();
 
 })
 
+let objDid={
+    _id:Date.now(),
+    did:aliceFaberDid,
+    owner:obj.certificateData.name,
+    relationship:obj.certificateData.name+obj.issuer+"DID"
+}
+
+MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("sovrinDB");
+    dbo.collection("DID").insertOne(objDid, function(err, result) {
+      if (err) throw err;
+    //   console.log(result);
+      console.log("DID document inserted for "+ obj.certificateData.name);
+    });
+
+  });
+
 
 }
 
@@ -784,7 +802,53 @@ app.get('/api/did/:name', function(req,res){
 
 });
 
+// ------------------------Creat Authorise Services----------------------
+app.post('/api/creatAuthServiceList', function(req,resp){
+    console.log('api creatAuthServiceList');
+    console.log(req.body);
+
+
+MongoClient.connect(url, function(err, db) {
+
+    if (err) throw err;
+    var dbo = db.db("sovrinDB");
+    dbo.collection("AuthServices").insertOne(req.body, function(err, res) {
+      if (err) throw err;
+      console.log("Auth Services created");
+      resp.send("success");
+      db.close();
+    });
+    
+  });
+   
+
+})
  
+// -------------------------Get Auth Service List---------------------
+
+// ---------------------------------Schema Get Requst-----------------------
+
+app.get('/api/getAuthServiceList/:name/:status', function(req,res){
+    console.log('getAuthServiceList');
+    console.log(req.params.name, req.params.status);
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+        // var myobj = { name: "Company Inc", address: "Highway 37" };
+        
+        // var query = {name: req.params.name};
+        dbo.collection("AuthServices").find( {userList:{$elemMatch:{name:req.params.name,status:Boolean(req.params.status)}}}).toArray(function(err, result) {
+    if (err) throw err;
+    console.log('result for getAuthServiceList');
+    // console.log(result);
+    res.send({data:result})
+    db.close();
+  })
+
+
+})
+
+});
 
 //Ruotes
 // app.use('/', index);

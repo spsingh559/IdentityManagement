@@ -14,6 +14,10 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import Checkbox from 'material-ui/Checkbox';
+
+import Visibility from 'material-ui/svg-icons/content/link';
+// import VisibilityOff from 'material-ui/svg-icons/content/link_off';
+
 import TAPendingServiceDetail from './TAPendingServiceDetail';
 import TAApproveServiceDetail from './TAApproveServiceDetail';
 
@@ -26,7 +30,17 @@ export default class CreateService extends React.Component{
         open:false,
         serviceData:[],
         value:'',
-        arr:[]
+        arr:[],
+        authServiceArr:[],
+        checked: false
+    }
+
+    updateCheck() {
+      this.setState((oldState) => {
+        return {
+          checked: !oldState.checked,
+        };
+      });
     }
 
     componentDidMount=()=>{
@@ -67,11 +81,27 @@ export default class CreateService extends React.Component{
         .catch((err)=>{
           alert('Try again Error in fetching record for schema')
         })
+
+        let status=true;
+      Axios({
+        method:'get',
+        url:restUrl+'/api/getAuthServiceList/'+retrievedUserDetails.name+'/'+status,
+      })
+      .then((data) => {
+        console.log('--------------result of getAuthServiceList----------------');
+        console.log(data)
+        data.data.data.forEach((datas,i)=>{
+        this.state.authServiceArr.push(<MenuItem value={datas.serviceName} key={i} primaryText={datas.serviceName + " - Service"} />)
+        })
+      })
+      .catch((err)=>{
+        alert('Try again, Error in fetching record for getAuthServiceList')
+      })
     
   }
 
   handleChangeRole=(event, index, value) => this.setState({value:value});
-
+  handleChangeAuthService=(event, index, value) => this.setState({serviceName:value});
     submitService=()=>{
       let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
         var monthName=["Jan", "Feb","March","April","May","Jun","July","Aug","Sept","Oct","Nov","Dec"];
@@ -82,17 +112,17 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
             owner:retrievedUserDetails.name,
             serviceName:this.state.serviceName,
             serviceDescription:this.state.serviceDescription,
-            apiUrl:'/api/get'+this.state.serviceName.toLowerCase(),
-            uiRoutes:'/'+this.state.serviceName.toLowerCase(),
+            apiUrl:'/api/get'+this.state.serviceName.split(" ").join("").toLowerCase(),
+            uiRoutes:'/'+this.state.serviceName.split(" ").join("").toLowerCase(),
             serviceStatus:'Active',
             schemaId:this.state.value,
+            proofReq:this.state.checked,
             list:[],
             timeStamp:latestDate
         }
 
         console.log(obj);
-
-        Axios({
+ Axios({
             method:'post',
             url:restUrl+'/api/creatService',
             data:obj
@@ -111,6 +141,7 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
           .catch((err)=>{
             console.log('catch error')
           })
+       
     }
 
     handleRequestClose = () => {
@@ -139,14 +170,26 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
     >
    <Grid >
              <Col xs={12}>
-         <TextField
+         {/* <TextField
       hintText="Service Name"
       hintStyle={{color:"white"}}
       inputStyle={{color:"white"}}
       floatingLabelStyle={{color:"white"}}
       floatingLabelText="Enter Service  Name"
       onChange = {(event,newValue) => this.setState({serviceName:newValue})}
-    />
+    /> */}
+     <SelectField 
+           hintStyle={{color:"white"}}
+           inputStyle={{color:"white"}}
+           floatingLabelStyle={{color:"white"}}
+           hintText="Select Auth Service"
+          floatingLabelText="List of Auth Service"
+          value={this.state.serviceName}
+          onChange={this.handleChangeAuthService}
+          fullWidth={true}
+        >
+         {this.state.authServiceArr}
+        </SelectField>
     <br />
      <TextField
       hintText="Service Description"
@@ -172,6 +215,18 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
         >
          {this.state.arr}
         </SelectField>
+        <br />
+        <br />
+        <Checkbox
+          checkedIcon={<Visibility />}
+          label="Proof Required"
+          checked={this.state.checked}
+          onCheck={this.updateCheck.bind(this)}
+          labelStyle={{color:"white"}}
+          iconStyle={{color:"white"}}
+          inputStyle={{color:"white"}}
+        />
+        <br />
         <br />
     <center>
         <RaisedButton

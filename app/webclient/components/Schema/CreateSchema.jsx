@@ -15,6 +15,8 @@ import restUrl from '../restUrl';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Send from 'material-ui/svg-icons/content/send';
+import MenuItem from 'material-ui/MenuItem';
+import SelectField from 'material-ui/SelectField';
 import ShowSchema from './ShowSchema.jsx';
 
 const styles = {
@@ -55,12 +57,33 @@ export default class CreateSchema extends React.Component {
         schemaAttrName:'',
         schemaData:[],
         schemaName:'',
-        version:"0.1"
+        version:"0.1",
+        arr:[],
+        value:[]
     }
     static get contextTypes() {
       return {
         router: React.PropTypes.object.isRequired
       }
+    }
+
+    componentDidMount=()=>{
+      let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+      let status=true;
+      Axios({
+        method:'get',
+        url:restUrl+'/api/getAuthServiceList/'+retrievedUserDetails.name+'/'+status,
+      })
+      .then((data) => {
+        console.log('--------------result of getAuthServiceList----------------');
+        console.log(data)
+        data.data.data.forEach((datas,i)=>{
+          this.state.arr.push(<MenuItem value={datas.serviceName} key={i} primaryText={datas.serviceName + " - Service"} />)
+        })
+      })
+      .catch((err)=>{
+        alert('Try again Error in fetching record for schema')
+      })
     }
 
     addSchema=(e)=>{
@@ -93,7 +116,7 @@ export default class CreateSchema extends React.Component {
         schemaAttrArr.push(data.name)
       });
       let obj={
-        schemaName:this.state.schemaName,
+        schemaName:this.state.value.split(" ").join(""),
         version:this.state.version,
         name:retrievedUserDetails.name,
         schemaAttrName:schemaAttrArr.reverse()
@@ -108,7 +131,7 @@ export default class CreateSchema extends React.Component {
         console.log('--------------result of Create Schema ----------------');
         console.log(data)
         if(data.data=='success'){
-          alert(this.state.schemaName + ' Schema has been created successfully');
+          alert(this.state.value + ' Schema has been created successfully');
           this.context.router.push('/entity');
         }else{
           alert('Error while creating schema');
@@ -119,6 +142,8 @@ export default class CreateSchema extends React.Component {
         console.log('catch error')
       })
     }
+
+    handleChangeRole=(event, index, value) => this.setState({value:value});
 
   render() {
 
@@ -133,14 +158,18 @@ export default class CreateSchema extends React.Component {
      </div>
      <Grid >
      <Col xs={12}>
-     <TextField
-      hintText="Schema Name"
-      hintStyle={{color:"white"}}
-      inputStyle={{color:"white"}}
-      floatingLabelStyle={{color:"white"}}
-      floatingLabelText="Enter Schema  Name"
-      onChange = {(event,newValue) => this.setState({schemaName:newValue})}
-    />
+     <SelectField 
+           hintStyle={{color:"white"}}
+           inputStyle={{color:"white"}}
+           floatingLabelStyle={{color:"white"}}
+           hintText="Select Services"
+          floatingLabelText="List of Services"
+          value={this.state.value}
+          onChange={this.handleChangeRole}
+          fullWidth={true}
+        >
+         {this.state.arr}
+        </SelectField>
     </Col>
     <br />
     <Col xs={12}>
