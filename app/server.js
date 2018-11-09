@@ -780,6 +780,25 @@ app.get('/api/schemaCred/:name', function(req,res){
 
 });
 
+// -------------Get All Schema Cred Request-----------------------------------
+
+app.get('/api/schemaCred/', function(req,res){
+    console.log('req received for All cred ID');
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+      dbo.collection("credential").find({}).toArray(function(err, result) {
+    if (err) throw err;
+    // console.log(result);
+    res.send({data:result})
+    db.close();
+  })
+
+
+})
+
+});
+
 // -------------------DID get request--------------------------
 
 app.get('/api/did/:name', function(req,res){
@@ -849,6 +868,32 @@ app.get('/api/getAuthServiceList/:name/:status', function(req,res){
 })
 
 });
+
+// -----------------Create Proof in mongp -------------------
+
+app.post('/api/createProof', function(req,response){
+    console.log('createProof api for mongo');
+   
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+        // var myobj = { name: "Company Inc", address: "Highway 37" };
+        
+        // var query = {name: req.params.name};
+        dbo.collection("proof").insertOne(req.body, function(err, res) {
+            if (err) throw err;
+            console.log("createProof done");
+            response.send("success");
+            db.close();
+          });
+
+
+})
+
+});
+
+// -----------------End Create Proof in mongp -------------------
+
 
 //Ruotes
 // app.use('/', index);

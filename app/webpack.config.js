@@ -31,7 +31,8 @@ module.exports = {
               {
                 test: /\.(jpe?g|png|gif|svg)$/i,
                 loaders: ['file-loader']
-              }
+              },
+              {test: /\.styl$/, loader: "style-loader!css-loader!stylus-loader"}
             ]
  },
  watch:true,

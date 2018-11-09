@@ -251,9 +251,9 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
       label="Await Approval"
     >
     <Grid>
-    <Col xs={12}>
+    
     <TAPendingServiceDetail  data={this.state.serviceData}/>
-    </Col>
+   
     </Grid>
     </Tab>
     <Tab
@@ -261,9 +261,9 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
       label="Approved"
     >
     <Grid>
-    <Col xs={12}>
+   
     <TAApproveServiceDetail  data={this.state.serviceData}/>
-    </Col>
+   
     </Grid>
     </Tab>
     

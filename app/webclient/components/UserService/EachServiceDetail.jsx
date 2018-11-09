@@ -53,6 +53,7 @@ export default class EachServiceDetail extends React.Component{
        
         <CardText expandable={true}>
           {this.props.data.serviceDescription}
+          {this.props.data.proofReq?<p><b>Note : This service Required proof from your credentials</b></p>:null}
         </CardText>
         <CardActions>
           <FlatButton label="Get Now" onTouchTap={this.approve} />

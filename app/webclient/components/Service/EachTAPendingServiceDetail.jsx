@@ -1,6 +1,13 @@
 import React from 'react';
 import UserData from './UserData';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 export default class EachTAPendingServiceDetail extends React.Component{
+
+    // state = {
+    //     open: false,
+    //   };
 
     static get contextTypes() {
         return {
@@ -11,17 +18,52 @@ export default class EachTAPendingServiceDetail extends React.Component{
     approve=(name)=>{
         this.context.router.push(this.props.data.uiRoutes+'/'+name+'/'+this.props.data.CredDefId+'/'+this.props.data._id);
     }
-   
+    genrateProof=(name)=>{
+        // console.log('name reached in genrate Proof', name);
+        // this.setState({open: true});
+        this.context.router.push('/genrateProof/'+name+'/'+this.props.data.serviceName+'/'+this.props.data.owner);
+    }
+
+    // handleClose = () => {
+    //     this.setState({open: false});
+    //   };
+
     render(){
-        
+        const actions = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onClick={this.handleClose}
+      />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.handleClose}
+      />,
+    ];
         return(
 
 <div className="panel panel-primary" style={{ marginTop:"10px",height:"auto"}}>
 <div className="panel-heading">{this.props.data.serviceName}</div>
   <div className="panel-body" style={{height:"300px", overflowY:"auto"}}>
-  <UserData data={this.props.data.list} approve={this.approve}/>
+  <UserData data={this.props.data.list}
+            approve={this.approve} 
+            proofReq={this.props.data.proofReq}
+            genrateProof={this.genrateProof}
+ />
   </div>
   <div className="panel-footer">{this.props.data.serviceDescription}</div>
+  {/* <Dialog
+          title="Genrate Proof Window"
+          actions={actions}
+          modal={true}
+          open={this.state.open}
+          onRequestClose={this.handleClose}
+          autoScrollBodyContent={true}
+        >
+         Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi odio magnam qui ipsum placeat et eligendi corporis animi! Quibusdam, incidunt. Itaque ipsa quasi eaque cumque sequi obcaecati commodi repudiandae officia.
+        </Dialog> */}
 </div>
         )
     }

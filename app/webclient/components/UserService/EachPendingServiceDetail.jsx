@@ -1,8 +1,11 @@
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
-
+import IconButton from 'material-ui/IconButton';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-
+import {blue500, red500, greenA200} from 'material-ui/styles/colors';
+import Proof from 'material-ui/svg-icons/action/assessment';
+import Delete from 'material-ui/svg-icons/action/delete';
+import {Col, Row, Grid,Image} from 'react-bootstrap';
 export default class EachPendingServiceDetail extends React.Component{
 
     approve=()=>{
@@ -39,8 +42,21 @@ export default class EachPendingServiceDetail extends React.Component{
         <CardText expandable={true}>
           {this.props.data.serviceDescription}
         </CardText>
-        <CardActions>
-          <FlatButton label="Withdraw Request" onTouchTap={this.approve} />
+       
+        {/* <CardActions>
+        {this.props.data.proofReq? <IconButton >
+      <Proof color={blue500} onTouchTap={this.approve}/>
+    </IconButton>
+       :null}
+          <IconButton >
+      <Delete color={red500} onTouchTap={this.approve}/>
+    </IconButton>
+        </CardActions> */}
+
+         <CardActions>
+        {this.props.data.proofReq? <FlatButton label="Response"  />
+       :null}
+       <FlatButton label="Withdraw"  />
         </CardActions>
       </Card>
         )
