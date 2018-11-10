@@ -28,6 +28,7 @@ import RequestSchema from './components/RequestSchema/RequestSchema';
 import Registration from './components/Login/Registration';
 import  BrentServices from './components/BrentServices/BrentCreateService';
 import GenrateProof from './components/Service/GenrateProof';
+import Chat from './components/Chat/Chat';
 // All Certificate list-----------------------
 // ji
 
@@ -50,6 +51,7 @@ ReactDOM.render(
 	<Route path="/myServices" component={MyServices} />
 	<Route path="/requestSchema" component={RequestSchema} />
 	<Route path="/createService" component={CreateService} />
+	<Route path="/messaging" component ={Chat} />
 	<Route path="/genrateProof/:name/:serviceName/:owner" component={GenrateProof} />
 	<Route path="/birthcertificate/:name/:CredDefId/:serviceId" component={BirthCertificate} />
 	<Route path="/myProfileEntity" component={ProfileEntity} />

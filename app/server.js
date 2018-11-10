@@ -894,6 +894,78 @@ app.post('/api/createProof', function(req,response){
 
 // -----------------End Create Proof in mongp -------------------
 
+// -----------------getUserByUserType for chatting-------------------
+
+app.get('/api/getUserByUserType/:role', function(req,response){
+    console.log('getUserByUserType api');
+   console.log('role received is', req.params.role)
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+        var query = { role: req.params.role};
+        dbo.collection("registration").find(query).toArray(function(err, result) {
+    if (err) throw err;
+    // console.log(result);
+    response.send({data:result})
+    db.close();
+  })
+
+
+
+})
+
+});
+
+// -----------------End getUserByUserType for chatting -------------------
+
+// -----------------getUserByUserType for chatting-------------------
+
+app.post('/api/sendMessage', function(req,response){
+    console.log('sendMessage api is');
+  
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+        // var query = {name: req.params.name};
+        dbo.collection("message").insertOne(req.body, function(err, res) {
+            if (err) throw err;
+            console.log("createProof done");
+            response.send("success");
+            db.close();
+          });
+
+
+
+})
+
+});
+
+// -----------------End getUserByUserType for chatting -------------------
+
+// -----------------create channel for chatting-------------------
+
+app.post('/api/createChannel', function(req,response){
+    console.log('createChannel api is');
+  
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+        // var query = {name: req.params.name};
+        dbo.collection("channel").insertOne(req.body, function(err, res) {
+            if (err) throw err;
+            console.log("createChannel done");
+            response.send("success");
+            db.close();
+          });
+
+
+
+})
+
+});
+
+// -----------------End getUserByUserType for chatting -------------------
+
 
 //Ruotes
 // app.use('/', index);

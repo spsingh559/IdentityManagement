@@ -125,6 +125,10 @@ export default class Nav extends React.Component{
           <Link to ="/myServices">My Services</Link>
           </MenuItem>
 
+           <MenuItem onTouchTap={this.handleClose}>
+          <Link to ="/messaging">My Chat</Link>
+          </MenuItem>
+
           <MenuItem onTouchTap={this.handleClose}>
           <Link to ="/myProfile">My Profile</Link>
           </MenuItem>
@@ -177,6 +181,10 @@ export default class Nav extends React.Component{
                          <Link to="/onboarding"> Onboarding </Link>
                         </MenuItem>
 
+                             <MenuItem onTouchTap={this.handleClose}>
+          <Link to ="/messaging">My Chat</Link>
+          </MenuItem>
+          
                             {retrievedUserDetails.accessLevel=="A" && retrievedUserDetails.role=="TA"?null:
                          <MenuItem onTouchTap={this.handleClose}>
                          <Link to="/createSchema"> CreateSchema </Link>
