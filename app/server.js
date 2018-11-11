@@ -69,7 +69,7 @@ app.post('/api/onboarding', function(req,res){
     db.close();
   })
 })
-    
+m    
     }
 })
 
@@ -894,7 +894,7 @@ app.post('/api/createProof', function(req,response){
 
 // -----------------End Create Proof in mongp -------------------
 
-// -----------------getUserByUserType for chatting-------------------
+// -----------------getUserByUserType for adding to chat list-------------------
 
 app.get('/api/getUserByUserType/:role', function(req,response){
     console.log('getUserByUserType api');
@@ -916,24 +916,24 @@ app.get('/api/getUserByUserType/:role', function(req,response){
 
 });
 
-// -----------------End getUserByUserType for chatting -------------------
+// -----------------End getUserByUserType for adding to chat list -------------------
 
 // -----------------getUserByUserType for chatting-------------------
 
-app.post('/api/sendMessage', function(req,response){
+app.patch('/api/sendMessage', function(req,response){
     console.log('sendMessage api is');
   
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("sovrinDB");
-        // var query = {name: req.params.name};
-        dbo.collection("message").insertOne(req.body, function(err, res) {
-            if (err) throw err;
-            console.log("createProof done");
-            response.send("success");
-            db.close();
-          });
-
+        var myquery = { _id: req.body._id };
+        var newvalues = { $set: {message: req.body.message } };
+        dbo.collection("channel").updateOne(myquery, newvalues, function(err, res) {
+          if (err) throw err;
+          console.log("1 document updated");
+          response.send("success");
+          db.close();
+        });
 
 
 })
@@ -965,6 +965,30 @@ app.post('/api/createChannel', function(req,response){
 });
 
 // -----------------End getUserByUserType for chatting -------------------
+
+// -----------------getUserByUserType for adding to chat list-------------------
+
+app.get('/api/getChannelByPubOrSub/:name', function(req,response){
+    console.log('getChannelByPubOrSub api');
+   console.log('name received is', req.params.name)
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+        var query = {  $or: [ { channelPub: req.params.name }, { channelSub: req.params.name } ] };
+        dbo.collection("channel").find(query).toArray(function(err, result) {
+    if (err) throw err;
+    // console.log(result);
+    response.send({data:result})
+    db.close();
+  })
+
+
+
+})
+
+});
+
+// -----------------End getUserByUserType for adding to chat list -------------------
 
 
 //Ruotes

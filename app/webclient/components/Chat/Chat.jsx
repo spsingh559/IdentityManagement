@@ -17,7 +17,7 @@ import Axios from 'axios';
 import restUrl from '../restUrl';
 import Keyboardbackspace from 'material-ui/svg-icons/hardware/keyboard-backspace';
 import Send from 'material-ui/svg-icons/content/send';
-import {Row} from 'react-bootstrap';
+import {Grid,Row} from 'react-bootstrap';
 import TextField from 'material-ui/TextField';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Communication from 'material-ui/svg-icons/communication/message';
@@ -25,6 +25,7 @@ import Communication from 'material-ui/svg-icons/communication/message';
 
 import MessageComponent from './MessageComponent.jsx';
 import ShowMessage from './ShowMessage';
+import Channel from './Channel';
 
 const style={
     paperStyle:{
@@ -77,47 +78,7 @@ const style={
     width: '100%',
     maxWidth: 'none',
   };
-  // const chatUserData=[{
-  //   _id:"1",
-  //   userId:"Navjeet",
-  //   imgUrl:"https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAAOMAAAAJDU5YjQzMzdjLWQ0NGYtNDdkNi1hYzA3LWQ4YTQ5YzEzOTA5MQ.jpg",
-  //   status:"Jindgi Itni Assan n Hai",
-  //   recentMessage:"Gins has sent New Message for You!!"
-
-  // },{
-  //   _id:"2",
-  //   userId:"Pranjul",
-  //   imgUrl:"https://media-exp2.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAAfGAAAAJDNhYTZjYTY5LTBhOGUtNDUzYS1iMjBhLTk3Nzk3YjVkODkwYQ.jpg",
-  //   status:"If Life is Lemon, Squeez It",
-  //   recentMessage:" One Message from Someone!!"
-
-  // },{
-  //   _id:"3",
-  //   userId:"Gins",
-  //   imgUrl:"https://scontent.fblr2-1.fna.fbcdn.net/v/t1.0-1/c25.0.100.100/p100x100/13700171_1054027358018701_4686459465728184803_n.jpg?oh=a12a9388dd4453f7b192de25433c775b&oe=5B12F8ED",
-  //   status:"A Bai Tum Kya Kar rahe ho??",
-  //   recentMessage:"One Message from ready to Mingle!!"
-
-  // },{
-  //   _id:"4",
-  //   userId:"shyam",
-  //   imgUrl:"https://scontent.fblr2-1.fna.fbcdn.net/v/t1.0-1/c27.0.160.160/p160x160/27066953_1497553197033986_2819931860275330955_n.jpg?oh=31daa0f6e6059ece7f4626381b9c3153&oe=5B09D9F3",
-  //   status:"Think and Update",
-  //   recentMessage:"Fill in the blanks"
-
-  // },{
-  //   _id:"5",
-  //   userId:"Mammas",
-  //   imgUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEQDRjCxHUIrllfk6bpwnLD4dw5-DSw6s4gVwIMa9Fg-ATbP1X",
-  //   status:"Single vs Mammas",
-  //   recentMessage:"Waiting for 1st Message"
-  // }];
-
-
-
-
-
-
+  
 export default class Chat extends React.Component{
 
   state={
@@ -127,7 +88,8 @@ export default class Chat extends React.Component{
     messageData:[],
     chatUserData:[],
     open: false,
-    userArr:[]
+    userArr:[],
+    channelData:[]
   }
  
 
@@ -135,6 +97,102 @@ export default class Chat extends React.Component{
     this.setState({open: false});
   };
   componentDidMount=()=>{
+    let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+    Axios({
+      method:'get',
+      url:restUrl+'/api/getChannelByPubOrSub/'+retrievedUserDetails.name,
+    })
+    .then((data) => {
+      console.log('--------------result of register detail is----------------');
+      console.log(data);
+      this.setState({channelData:data.data.data})
+    
+     })
+    .catch((err)=>{
+      alert('Try again Error in fetching record for schema')
+    })
+  }
+
+  messageWindowStatus=(_id)=>{
+    console.log(_id);
+    // particularUserData
+    this.state.channelData.forEach((data)=>{
+      if(data._id==_id){
+        this.setState({particularUserData:data})
+      }
+    })
+//     let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+//     Axios({
+//       method:'get',
+//       url:restUrl+'/api/getMessageFrom/'+data.name+'/to'+retrievedUserDetails.name,
+//     })
+//     .then((data) => {
+//       console.log('--------------result of register detail is----------------');
+//       console.log(data);
+//       // this.setState({chatUserData:data.data.data})
+    
+//      })
+//     .catch((err)=>{
+//       alert('Try again Error in fetching record message')
+//     })    
+this.setState({windowStatus:true});
+
+  }
+
+  showUserScreen=()=>{
+    this.setState({windowStatus:false});
+  }
+
+  sendMessage=()=>{
+    let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+    
+        var monthName=["Jan", "Feb","March","April","May","Jun","July","Aug","Sept","Oct","Nov","Dec"];
+var date=new Date();
+var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYear()+" "+ date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+
+        let name;
+ if(this.state.particularUserData.channelPub==retrievedUserDetails.name){
+    name=this.state.particularUserData.channelSub
+ }else{
+     name=this.state.particularUserData.channelPub
+ }
+let obj={
+      _id:Date.now(),
+      message:this.state.message,
+      to:name,
+      from:retrievedUserDetails.name,
+      time:latestDate
+    }
+    this.state.particularUserData.message.push(obj);
+    this.setState({particularUserData:this.state.particularUserData,message:''});
+
+    // let newmessage=this.state.messageData.concat([obj]);
+    // this.setState({messageData:newmessage,message:''});
+    Axios({
+      method:'patch',
+      url:restUrl+'/api/sendMessage',
+      data:this.state.particularUserData
+    })
+    .then((data) => {
+      console.log('--------------result of register detail is----------------');
+      console.log(data);
+      if(data.data="success"){
+        console.log('message sent successfully');
+      }     
+    
+     })
+    .catch((err)=>{
+      alert('Try again Error in sending message')
+    })
+    
+  }
+
+  handleMessage=(e)=>{
+    this.setState({message:e.target.value});
+  }
+
+  addUser=()=>{
+    console.log('clicked');
     let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
     let userType =retrievedUserDetails.role;
     if(userType=="US"){
@@ -161,72 +219,6 @@ export default class Chat extends React.Component{
     .catch((err)=>{
       alert('Try again Error in fetching record for schema')
     })
-  }
-
-  messageWindowStatus=(data)=>{
-    let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
-    Axios({
-      method:'get',
-      url:restUrl+'/api/getMessageFrom/'+data.name+'/to'+retrievedUserDetails.name,
-    })
-    .then((data) => {
-      console.log('--------------result of register detail is----------------');
-      console.log(data);
-      // this.setState({chatUserData:data.data.data})
-    
-     })
-    .catch((err)=>{
-      alert('Try again Error in fetching record message')
-    })    
-this.setState({windowStatus:true,particularUserData:data});
-
-  }
-
-  showUserScreen=()=>{
-    this.setState({windowStatus:false});
-  }
-
-  sendMessage=()=>{
-    let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
-    
-        var monthName=["Jan", "Feb","March","April","May","Jun","July","Aug","Sept","Oct","Nov","Dec"];
-var date=new Date();
-var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYear()+" "+ date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
-    let obj={
-      _id:Date.now(),
-      message:this.state.message,
-      to:this.state.particularUserData.name,
-      from:retrievedUserDetails.name,
-      time:latestDate
-    }
-
-    let newmessage=this.state.messageData.concat([obj]);
-    this.setState({messageData:newmessage,message:''});
-    Axios({
-      method:'post',
-      url:restUrl+'/api/sendMessage',
-      data:obj
-    })
-    .then((data) => {
-      console.log('--------------result of register detail is----------------');
-      console.log(data);
-      if(data.data="success"){
-        console.log('message sent successfully');
-      }     
-    
-     })
-    .catch((err)=>{
-      alert('Try again Error in sending message')
-    })
-    
-  }
-
-  handleMessage=(e)=>{
-    this.setState({message:e.target.value});
-  }
-
-  addUser=()=>{
-    console.log('clicked');
     this.setState({open:true});
   }
 
@@ -239,19 +231,22 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
     let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
    
     this.state.userArr.forEach((data)=>{
-      let channelName;
-      if(retrievedUserDetails.role=="US"){
-        channelName=retrievedUserDetails.name+'-'+data;
-      }else{
-        channelName=data+'-'+retrievedUserDetails.name;
+      // let channelName;
+      // if(retrievedUserDetails.role=="US"){
+      //   channelName=retrievedUserDetails.name+'-'+data;
+      // }else{
+      //   channelName=data+'-'+retrievedUserDetails.name;
   
-      }
+      // }
       let obj={
-        channelName:channelName,
+        _id:Date.now()+data,
+        channelPub:retrievedUserDetails.name,
+        channelSub:data,
         message:[]
       }
+      let newData=[obj].concat(this.state.channelData);
       this.AddUserToServer(obj);
-      this.setState({open:false});
+      this.setState({open:false,channelData:newData});
     })
     
   
@@ -306,7 +301,7 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
     </FloatingActionButton>
    
       <div>
-        <MessageComponent chatUserData={this.state.chatUserData} messageWindowStatus={this.messageWindowStatus}/>
+        <Channel data={this.state.channelData} messageWindowStatus={this.messageWindowStatus}/>
       </div>
     </Tab>
     <Tab label="Status" style={{backgroundColor:"#075e54",color:'white'}}>
@@ -340,20 +335,27 @@ var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYea
                 </div>
         )}else{
 
+          let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+        let name;
+ if(this.state.particularUserData.channelPub==retrievedUserDetails.name){
+    name=this.state.particularUserData.channelSub
+ }else{
+     name=this.state.particularUserData.channelPub
+ }
           return(
             <div style={style.paperStyle2}>
             <List style={{backgroundColor:"#075e54",color:'white'}}>
         <ListItem
         style={{color:"white"}}
           leftAvatar={ <Keyboardbackspace color="white" onTouchTap={this.showUserScreen}/>}
-          primaryText={this.state.particularUserData.name}
+          primaryText={name}
           rightIcon={<Avatar > 
-             {this.state.particularUserData.name.charAt(0).toUpperCase()}
+             {name.charAt(0).toUpperCase()}
           </Avatar>}
         />
         </List>
         <Row style={style.messageBox}>
-            <ShowMessage messageData={this.state.messageData} />
+            <ShowMessage data={this.state.particularUserData.message} />
           </Row>
           <Row style={style.messageBoxFooter}>
           <center>
