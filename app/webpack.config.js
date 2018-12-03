@@ -12,8 +12,10 @@ module.exports = {
  },
  output: {
    path: path.join(__dirname, "webclient", "dist"),
-   publicPath: "/dist/",
-   filename: "bundle.js"
+   publicPath: "http://35.229.77.139:8080/dist/",
+   filename: "bundle.js",
+   hotUpdateChunkFilename: 'hot/hot-update.js',
+  hotUpdateMainFilename: 'hot/hot-update.json'
  },
  module: {
      loaders: [
@@ -31,8 +33,7 @@ module.exports = {
               {
                 test: /\.(jpe?g|png|gif|svg)$/i,
                 loaders: ['file-loader']
-              },
-              {test: /\.styl$/, loader: "style-loader!css-loader!stylus-loader"}
+              }
             ]
  },
  watch:true,

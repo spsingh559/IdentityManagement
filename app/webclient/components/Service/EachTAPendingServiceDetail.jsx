@@ -16,6 +16,7 @@ export default class EachTAPendingServiceDetail extends React.Component{
       }
     
     approve=(name)=>{
+
         this.context.router.push(this.props.data.uiRoutes+'/'+name+'/'+this.props.data.CredDefId+'/'+this.props.data._id);
     }
     genrateProof=(name)=>{
@@ -49,6 +50,8 @@ export default class EachTAPendingServiceDetail extends React.Component{
   <div className="panel-body" style={{height:"300px", overflowY:"auto"}}>
   <UserData data={this.props.data.list}
             approve={this.approve} 
+            serviceName={this.props.data.serviceName}
+            owner={this.props.data.owner}
             proofReq={this.props.data.proofReq}
             genrateProof={this.genrateProof}
  />

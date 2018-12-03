@@ -115,8 +115,7 @@ let governmentWalletConfig = {'id': entityName+"Wallet"}
 
 onboardingUserUpdate=(name,status)=>{
     console.log('------------request received----------------')
- 
-
+    
       MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("sovrinDB");
@@ -140,7 +139,12 @@ app.post('/api/creatSchema', function(req,res){
     console.log("==============================");
     console.log("=== Credential Schemas Setup ==");
     console.log("------------------------------");
-
+    // run();
+    // async function run(){
+   
+    //    [, schema] = await getSchema(poolHandle, "TAbbFxAje8szAH2tCLs2FA", "TAbbFxAje8szAH2tCLs2FA:2:BirthCertificate:0.5");
+    //    console.log('schema for Birthcertificate', schema)
+    // }
     console.log("\"Government\" -> Create \"Job-Certificate\" Schema");
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
@@ -149,6 +153,7 @@ app.post('/api/creatSchema', function(req,res){
         dbo.collection("DID").find(query).toArray(function(err, result) {
     if (err) throw err;
     // console.log(result);
+    
     this.creatSchema(req.body,result[result.length-1].did,res);
     db.close();
   })
@@ -169,9 +174,13 @@ creatSchema=(obj,did,res)=>{
     console.log('did is', did);
     schema();
     async function schema(){
+        [, schema] = await getSchema(poolHandle, "TAbbFxAje8szAH2tCLs2FA", "TAbbFxAje8szAH2tCLs2FA:2:BirthCertificate:0.5");
+    console.log('schema for Birthcertificate', schema)
 let [jobCertificateSchemaId, jobCertificateSchema] = await indy.issuerCreateSchema(
     did, obj.schemaName, obj.version,obj.schemaAttrName);
 
+    console.log('schema structure is', jobCertificateSchema);
+    console.log('jobCertificateSchemaId',jobCertificateSchemaId);
     let governmentWalletConfig = {'id': obj.name+"Wallet"}
     let governmentWalletCredentials = {'key': obj.name+"_key"}
 governmentWallet = await indy.openWallet(governmentWalletConfig, governmentWalletCredentials);
@@ -203,7 +212,7 @@ governmentWallet = await indy.openWallet(governmentWalletConfig, governmentWalle
 // ------------------------Creat Schema Credential----------------------
 app.post('/api/createSchemaCred', function(req,res){
     console.log('api registration');
-    // console.log(req.body);
+    console.log(req.body);
     // createSchemaCred();
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
@@ -482,6 +491,7 @@ let Wallet = await indy.openWallet(TAWalletConfig, TAWalletCredentials);
     let faberTranscriptCredDef;
     [faberTranscriptCredDefId, faberTranscriptCredDef] = await getCredDef(poolHandle, aliceFaberDid, authdecryptedTranscriptCredOffer['cred_def_id']);
 
+    console.log('faberTranscriptCredDefId, faberTranscriptCredDef -------------======>',faberTranscriptCredDefId, faberTranscriptCredDef)
     console.log(obj.certificateData.name+" -> Create \"Birth Certificate\" Credential Request for "+ obj.issuer);
     let [transcriptCredRequestJson, transcriptCredRequestMetadataJson] = await indy.proverCreateCredentialReq(aliceWallet, aliceFaberDid, authdecryptedTranscriptCredOfferJson, faberTranscriptCredDef, aliceMasterSecretId);
 
@@ -612,6 +622,208 @@ app.get('/api/getCertificateByUser/:name', function(req,res){
 
 // -------------------------Get certificate by Owner End---------------------------------------
 
+// --------------------Grammar school certificate ---------------------------
+
+app.post('/api/getgrammarschoolcertificate', function(req, response){
+console.log(req.body.serviceName,req.body.issuer,req.body.user )
+
+MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("sovrinDB");
+dbo.collection("proof").findOne({serviceName: req.body.serviceName,issuer:req.body.issuer,user: req.body.user},function(err, result) {
+    if (err) throw err;
+    console.log(result.proof.requested_attributes)
+        this.findDID(result,response);
+        db.close();
+  })
+
+})
+  
+})
+
+findDID=(proofData,response)=>{
+    console.log('----------inside findDID function -----------');
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+        var query = { owner: proofData.issuer};
+        dbo.collection("DID").find(query).toArray(function(err, result) {
+    if (err) throw err;
+    console.log('----------did id -----------', result[result.length-1].did);
+   this.createGrammarCertificate(proofData,response,result[result.length-1].did)
+    db.close();
+  })
+
+
+})
+}
+
+createGrammarCertificate=(result,response,issuerDID)=>{
+    
+    console.log(' result set from find did');
+    console.log(result,issuerDID);
+    let acmeAliceKey, aliceAcmeDid, aliceAcmeKey, acmeAliceConnectionResponse;
+    run();
+    // MmhdmzWP4mLiNosRycCDDL:3:CL:262:TAG1 - cred def Id AIIMS
+    async function run(){
+         
+        console.log('----------inside createGrammarCertificate function is-----------');
+        let TAWalletConfig = {'id': result.issuer+"Wallet"}
+    let TAWalletCredentials = {'key': result.issuer+"_key"}
+    
+let TAWallet = await indy.openWallet(TAWalletConfig, TAWalletCredentials);
+
+let userWalletConfig = {'id': result.user+"Wallet"}
+let userWalletCredentials = {'key': result.user+"_key"}
+let userWallet = await indy.openWallet(userWalletConfig, userWalletCredentials);
+// await indy.closeWallet(TAWallet);
+//     await indy.closeWallet(userWallet);
+//     console.log('all wallet closed')
+    [userWallet, acmeAliceKey, aliceAcmeDid, aliceAcmeKey, acmeAliceConnectionResponse] = await onboarding(poolHandle, result.issuer, TAWallet, issuerDID, result.user, userWallet, userWalletConfig, userWalletCredentials);
+
+    console.log(userWallet, acmeAliceKey, aliceAcmeDid, aliceAcmeKey, acmeAliceConnectionResponse);
+    
+    console.log("\"Acme\" -> Create \"Job-Application\" Proof Request");
+    console.log("\"Acme\" -> Get key for Alice did");
+
+    let aliceAcmeVerkey = await indy.keyForDid(poolHandle, TAWallet, acmeAliceConnectionResponse['did']);
+
+    console.log("\"Acme\" -> Authcrypt \"Job-Application\" Proof Request for Alice");
+    // let jobApplicationProofRequestJson = {
+    //     'nonce': '14324223432421223124112121',
+    //     'name': 'grammarSchoolApplication',
+    //     'version': '0.1',
+    //     'requested_attributes': {
+    //         'attr1_referent': {
+    //             'name': 'name',
+    //             'restrictions': [{'cred_def_id': 'MmhdmzWP4mLiNosRycCDDL:3:CL:262:TAG1'}]
+    //         },
+    //         'attr2_referent': {
+    //             'name': 'fatherName',
+    //             'restrictions': [{'cred_def_id': 'MmhdmzWP4mLiNosRycCDDL:3:CL:262:TAG1'}]
+    //         },
+    //         'attr3_referent': {
+    //             'name': 'mobileNumber',
+    //             }
+            
+    //     }
+    // }
+
+    let authcryptedJobApplicationProofRequestJson = await indy.cryptoAuthCrypt(TAWallet, acmeAliceKey, aliceAcmeVerkey,Buffer.from(JSON.stringify(result.proof),'utf8'));
+
+    // let authcryptedJobApplicationProofRequestJson = await indy.cryptoAuthCrypt(TAWallet, acmeAliceKey, aliceAcmeVerkey,Buffer.from(JSON.stringify(jobApplicationProofRequestJson),'utf8'));
+     
+    console.log('authcryptedJobApplicationProofRequestJson', authcryptedJobApplicationProofRequestJson);
+
+    console.log("\"Acme\" -> Send authcrypted \"Job-Application\" Proof Request to Alice");
+
+    console.log("\"Alice\" -> Authdecrypt \"Job-Application\" Proof Request from Acme");
+    let [acmeAliceVerkey, authdecryptedJobApplicationProofRequestJson] = await authDecrypt(userWallet, aliceAcmeKey, authcryptedJobApplicationProofRequestJson);
+
+    console.log('acmeAliceVerkey, authdecryptedJobApplicationProofRequestJson', acmeAliceVerkey, authdecryptedJobApplicationProofRequestJson);
+
+    console.log("\"Alice\" -> Get credentials for \"Job-Application\" Proof Request");
+    let searchForJobApplicationProofRequest = await indy.proverSearchCredentialsForProofReq(userWallet, authdecryptedJobApplicationProofRequestJson, null)
+
+    console.log('searchForJobApplicationProofRequest', searchForJobApplicationProofRequest);
+
+    let credentials = await indy.proverFetchCredentialsForProofReq(searchForJobApplicationProofRequest, 'attr1_referent', 100)
+    let credForAttr1 = credentials[0]['cred_info'];
+
+    await indy.proverFetchCredentialsForProofReq(searchForJobApplicationProofRequest, 'attr2_referent', 100)
+    let credForAttr2 = credentials[0]['cred_info'];
+
+    await indy.proverFetchCredentialsForProofReq(searchForJobApplicationProofRequest, 'attr3_referent', 100)
+    let credForAttr3 = credentials[0]['cred_info'];
+
+    await indy.proverCloseCredentialsSearchForProofReq(searchForJobApplicationProofRequest)
+
+
+    let credsForJobApplicationProof = {};
+
+    credsForJobApplicationProof[`${credForAttr1['referent']}`] = credForAttr1;
+    credsForJobApplicationProof[`${credForAttr2['referent']}`] = credForAttr2;
+    credsForJobApplicationProof[`${credForAttr3['referent']}`] = credForAttr3;
+
+    let [schemasJson, credDefsJson, revocStatesJson] = await proverGetEntitiesFromLedger(poolHandle, "MmhdmzWP4mLiNosRycCDDL", credsForJobApplicationProof, result.user);
+
+    console.log("\"Alice\" -> Create \"Job-Application\" Proof");
+    let jobApplicationRequestedCredsJson = {
+        'self_attested_attributes': {
+            'attr3_referent': '123456789'
+        },
+        'requested_attributes': {
+            'attr1_referent': {'cred_id': credForAttr1['referent'], 'revealed': true},
+            'attr2_referent': {'cred_id': credForAttr2['referent'], 'revealed': true}
+            },
+            'requested_predicates': {}
+        
+    };
+
+    let aliceMasterSecretId = await indy.proverCreateMasterSecret(userWallet, null);
+
+    let jobApplicationProofJson = await indy.proverCreateProof(userWallet, authdecryptedJobApplicationProofRequestJson,
+        jobApplicationRequestedCredsJson, aliceMasterSecretId,
+        schemasJson, credDefsJson, revocStatesJson);
+
+console.log('jobApplicationProofJson',jobApplicationProofJson);
+
+let respData={
+    _id:result._id,
+    jobApplicationProofJson:jobApplicationProofJson
+}
+console.log('responseData is', respData);
+await indy.closeWallet(TAWallet);
+await indy.closeWallet(userWallet);
+response.send({data:respData});
+
+}
+}
+
+// ------------------Create Grammar Certificate -----------------------
+// app.post('/api/createGrammarCertificate', function(req, res){
+
+
+// })
+
+// ------------------Create Grammar Certificate End-----------------------
+
+app.patch('/api/updateProof',function(req,res){
+console.log('updateProof API');
+console.log(req.body);
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+        var myquery = { _id: req.body._id };
+        var newvalues = { $set: {response: req.body.jobApplicationProofJson } };
+        dbo.collection("proof").updateOne(myquery, newvalues, function(err, res) {
+          if (err) throw err;
+          console.log("1 document updated");
+          res.send("success");
+          db.close();
+        });
+
+
+})
+})
+
+app.post('/api/getProof',function(req,res){
+    console.log('getProof API');
+    console.log(req.body);
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("sovrinDB");
+    dbo.collection("proof").findOne({serviceName: req.body.serviceName,issuer:req.body.issuer,user: req.body.user},function(err, result) {
+        if (err) throw err;
+        console.log(result.proof.requested_attributes)
+           res.send({data:result})
+            db.close();
+      })
+    
+    })
+    })
+
+// ---------------End Grammar school certificate ----------------------------
 app.post('/api/registration', function(req,response){
     console.log('api registration');
     console.log(req.body);
@@ -679,7 +891,7 @@ app.post('/api/login', function(req,response){
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("sovrinDB");
-        // var myobj = { name: "Company Inc", address: "Highway 37" };
+        // var myobj = { name: "Company Inc", address: "Highway 37"  };
         
         var query = { name: req.body.name };
   dbo.collection("registration").find(query).toArray(function(err, result) {

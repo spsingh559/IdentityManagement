@@ -9,7 +9,7 @@ export default class EachMessage extends React.Component{
             console.log("from");
             return(
                 <Col xs={12}>
-                <Chip style={{marginTop:"5px",float:"left"}}>
+                <Chip style={{marginTop:"5px",float:"right", borderColor: "black",borderWidth: "1px",borderStyle: "solid"}}  backgroundColor="white">
                {this.props.data.message}
              </Chip> 
              </Col>
@@ -18,7 +18,7 @@ export default class EachMessage extends React.Component{
             console.log("to");
             return(
                 <Col xs={12}>
-           <Chip style={{marginTop:"5px", float: "right"}}>
+           <Chip style={{marginTop:"5px", float: "left" }} labelColor ="white" backgroundColor="#0ebaa6" >
           {this.props.data.message}
         </Chip> 
         </Col>

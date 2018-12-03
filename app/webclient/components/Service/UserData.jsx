@@ -26,6 +26,8 @@ export default class UserData extends React.Component{
                 key={i}
                 data={data}
                 i={i}
+                serviceName={this.props.serviceName}
+            owner={this.props.owner}
                 approve={this.approve}
                 genrateProof={this.genrateProof}
                 proofReq={this.props.proofReq}

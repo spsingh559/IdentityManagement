@@ -109,6 +109,9 @@ export default class Login extends React.Component {
       pwd:this.state.password
     }
 
+    console.log('data is', obj);
+    console.log('url is ', restUrl);
+
     Axios({
       method:'post',
       url:restUrl+'/api/login',

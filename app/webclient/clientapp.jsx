@@ -30,10 +30,10 @@ import  BrentServices from './components/BrentServices/BrentCreateService';
 import GenrateProof from './components/Service/GenrateProof';
 import Chat from './components/Chat/Chat';
 // All Certificate list-----------------------
-// ji
+
 
 import BirthCertificate from './components/Certificates/BirthCertificate/BirthCertificate';
-
+import GrammarSchoolCertificate from './components/Certificates/SchoolAdmissionComponent/GrammarSchoolAdmission';
 // ------------------Certifcate End ---------------
 ReactDOM.render(
 	<MuiThemeProvider>
@@ -52,8 +52,10 @@ ReactDOM.render(
 	<Route path="/requestSchema" component={RequestSchema} />
 	<Route path="/createService" component={CreateService} />
 	<Route path="/messaging" component ={Chat} />
+	
 	<Route path="/genrateProof/:name/:serviceName/:owner" component={GenrateProof} />
 	<Route path="/birthcertificate/:name/:CredDefId/:serviceId" component={BirthCertificate} />
+	<Route path="/grammarschoolcertificate/:name/:CredDefId/:serviceId" component={GrammarSchoolCertificate} />
 	<Route path="/myProfileEntity" component={ProfileEntity} />
 		<IndexRoute component={Home} />
 		</Route>

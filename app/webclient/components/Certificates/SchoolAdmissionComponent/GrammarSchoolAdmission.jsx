@@ -4,17 +4,17 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import {Grid,Row,Col,Carousel,Panel} from 'react-bootstrap';
 import FlatButton from 'material-ui/FlatButton';
-
+import ActionHome from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 
 export default class GrammarSchoolAdmission extends React.Component {
 
     state={
-        name:"kamlendra",
-        address:"kamalnathganj",
-        fatherName:"kamal",
-        date:"13-10-1993",
-        gender:"Male",
-        grade:"A+"
+        name:"",
+        address:"",
+        fatherName:"",
+        date:"",
+        gender:"",
+        grade:""
        }
  
       handleClose = () => this.setState({openDrawer: false});
@@ -57,21 +57,17 @@ export default class GrammarSchoolAdmission extends React.Component {
       }
   
     render() {
-        const actions = [
-            <FlatButton
-              label="Close"
-              primary={true}
-              onClick={this.dhandleClose}
-            />
-          ];
+       
         return (
-            <div className="background" style={{height:"auto"}}>
-            <Grid>
-            <div  style={{marginTop:"50px", color:"white"}}>
+          <div style={{marginTop:"90px",minHeight:"600px"}} className="homeBackground">
+          <div style={{backgroundColor:"black", color:"white", height:"40px", padding:"0px 5px"}}>
+             <center> <h4> <span onTouchTap={this.goBack}><ActionHome color="white" style={{marginRight:"10px"}} /></span> Grammar School Certificate</h4> </center>
+       </div>
+       <Grid>
   <TextField
-      hintStyle={{color:"black"}}
-      inputStyle={{color:"black"}}
-      floatingLabelStyle={{color:"black"}}
+      hintStyle={{color:"white"}}
+      inputStyle={{color:"white"}}
+      floatingLabelStyle={{color:"white"}}
       hintText="Name of applicant"
       value={this.state.name}
       //onChange = {(event,newValue) => this.setState({name:newValue})}
@@ -80,9 +76,9 @@ export default class GrammarSchoolAdmission extends React.Component {
     />
     <br />
     <TextField
-      hintStyle={{color:"black"}}
-      inputStyle={{color:"black"}}
-      floatingLabelStyle={{color:"black"}}
+      hintStyle={{color:"white"}}
+      inputStyle={{color:"white"}}
+      floatingLabelStyle={{color:"white"}}
       hintText="Father's name"
       value={this.state.fatherName}
       floatingLabelText="Father's Name"
@@ -90,9 +86,9 @@ export default class GrammarSchoolAdmission extends React.Component {
     />
     <br />
     <TextField
-      hintStyle={{color:"black"}}
-      inputStyle={{color:"black"}}
-      floatingLabelStyle={{color:"black"}}
+      hintStyle={{color:"white"}}
+      inputStyle={{color:"white"}}
+      floatingLabelStyle={{color:"white"}}
       hintText="Address"
       value={this.state.address}
       floatingLabelText="Address"
@@ -100,9 +96,9 @@ export default class GrammarSchoolAdmission extends React.Component {
     />
     <br />
     <TextField
-      hintStyle={{color:"black"}}
-      inputStyle={{color:"black"}}
-      floatingLabelStyle={{color:"black"}}
+      hintStyle={{color:"white"}}
+      inputStyle={{color:"white"}}
+      floatingLabelStyle={{color:"white"}}
       hintText="Gender"
       floatingLabelText="Gender"
       fullWidth={true}
@@ -110,9 +106,9 @@ export default class GrammarSchoolAdmission extends React.Component {
     />
     <br />
     <TextField
-      hintStyle={{color:"black"}}
-      inputStyle={{color:"black"}}
-      floatingLabelStyle={{color:"black"}}
+      hintStyle={{color:"white"}}
+      inputStyle={{color:"white"}}
+      floatingLabelStyle={{color:"white"}}
       hintText="Date of Birth"
       floatingLabelText="Date of Birth"
       value={this.state.date}
@@ -120,9 +116,9 @@ export default class GrammarSchoolAdmission extends React.Component {
       />
       <br />
       <TextField
-      hintStyle={{color:"black"}}
-      inputStyle={{color:"black"}}
-      floatingLabelStyle={{color:"black"}}
+      hintStyle={{color:"white"}}
+      inputStyle={{color:"white"}}
+      floatingLabelStyle={{color:"white"}}
       hintText="Primary School Grade"
       floatingLabelText="Primary School Grade"
       value={this.state.grade}
@@ -132,7 +128,6 @@ export default class GrammarSchoolAdmission extends React.Component {
     <br />
     <br />
     <RaisedButton style={{borderRadius:'13px'}} label="Submit" primary={true}  onTouchTap={this.applyGrammarSchoolAdmission} fullWidth={true}/>
-      </div>
       </Grid> 
       </div>
         )

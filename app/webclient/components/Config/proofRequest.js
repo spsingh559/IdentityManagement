@@ -17,14 +17,15 @@ obj.grammarschoolcertificate={
             'restrictions': [{'cred_def_id': 'RequiredTranscriptId'}]
         },
         'attr2_referent': {
-            'name': 'dateOfBirth',
+            'name': 'fatherName',
             'restrictions': [{'cred_def_id': 'RequiredTranscriptId'}]
         },
         'attr3_referent': {
-            'name': 'fatherName',
-            },
+            'name': 'mobileNumber',
+            }
         
-    }
+    },
+    'requested_predicates': {}
 }
 
 

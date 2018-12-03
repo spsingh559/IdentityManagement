@@ -8,18 +8,76 @@ import Delete from 'material-ui/svg-icons/action/delete';
 import {Col, Row, Grid,Image} from 'react-bootstrap';
 import {blue500, red500, greenA200} from 'material-ui/styles/colors';
 // import UserData from './UserData';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import JSONPretty from 'react-json-pretty';
+import Axios from 'axios';
+import restUrl from '../restUrl';
+const customContentStyle = {
+    width: '100%',
+    maxWidth: 'none',
+  };
 export default class EachTAPendingServiceDetail extends React.Component{
 
+    state={
+        openDiaglogue:false,
+        respData:{}
+    }
     approve=()=>{
+        if(this.props.proofReq){
+            
+            let obj={
+                serviceName: this.props.serviceName,
+                issuer:this.props.owner,
+                user: this.props.data.name
+            }
+            Axios({
+                method:'post',
+                url:restUrl+'/api/getProof',
+                data:obj
+              })
+              .then((data) => {
+                console.log('--------------result of updaing Service ----------------');
+                console.log(data)
+                
+                this.setState({respData:data.data.data})
+                this.setState({openDiaglogue:true})
+              })
+              .catch((err)=>{
+                alert('Try again Error in  fetching record')
+              })
+            
+        }else{
         this.props.approve(this.props.data.name);
+        }
     }
 
     genrateProof=()=>{
         this.props.genrateProof(this.props.data.name);
     }
-   
-    render(){
+    handleClose = () => {
+        this.setState({openDiaglogue: false});
+      };
 
+      submitResponse=()=>{
+        console.log(this.state.respData.response.requested_proof.revealed_attrs.attr1_referent.raw)
+        console.log(this.state.respData.response.requested_proof.revealed_attrs.attr2_referent.raw)
+        // this.props.approveForResponse(this.props.data.name);
+      }
+    render(){
+        const actions = [
+            <FlatButton
+              label="Cancel"
+              primary={true}
+              onClick={this.handleClose}
+            />,
+            <FlatButton
+              label="Submit"
+              primary={true}
+              onClick={this.submitResponse}
+            />,
+          ];
         
 
         // reject=()=>{
@@ -58,7 +116,18 @@ export default class EachTAPendingServiceDetail extends React.Component{
       <Delete color={red500}/>
     </IconButton>
     </td>
-     
+    <Dialog
+      title={"Response sent by " + this.props.data.name}
+      actions={actions}
+      modal={true}
+           open={this.state.openDiaglogue}
+           contentStyle={customContentStyle}
+      autoScrollBodyContent={true}
+    >
+    <Grid>
+      <JSONPretty id="json-pretty" json={this.state.respData}></JSONPretty>
+      </Grid>
+    </Dialog>
      
     </tr>
         

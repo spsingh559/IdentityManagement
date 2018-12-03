@@ -4,7 +4,9 @@ import React from 'react';
 import EachPendingServiceDetail from './EachPendingServiceDetail';
 export default class PendingServiceDetail extends React.Component{
 
-    
+    genrateResponse=(obj)=>{
+        this.props.genrateResponse(obj);
+    }
    
     render(){
         console.log(this.props.data);
@@ -14,6 +16,7 @@ export default class PendingServiceDetail extends React.Component{
                 <EachPendingServiceDetail
                 key={i}
                 data={data}
+                genrateResponse={this.genrateResponse}
                 />
             )
         })

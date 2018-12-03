@@ -8,14 +8,16 @@ import Delete from 'material-ui/svg-icons/action/delete';
 import {Col, Row, Grid,Image} from 'react-bootstrap';
 export default class EachPendingServiceDetail extends React.Component{
 
-    approve=()=>{
-        //  let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
-        // let obj={
-        //     name :retrievedUserDetails.name,
-        //     status:"P"
-        // }
-        // this.props.getNow(this.props.data._id,obj);
+    genrateResponse=()=>{
+        // /api/getgrammarschoolcertificate/serviceName/:serviceName/issuer/:issuer/user/:user
+        let obj={
+            serviceName:this.props.data.serviceName,
+            issuer:this.props.data.owner
+        }
+        this.props.genrateResponse(obj);
     }
+
+    
    
     render(){
         let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
@@ -54,7 +56,9 @@ export default class EachPendingServiceDetail extends React.Component{
         </CardActions> */}
 
          <CardActions>
-        {this.props.data.proofReq? <FlatButton label="Response"  />
+        {this.props.data.proofReq? <FlatButton label="Response" 
+        onTouchTap={this.genrateResponse} 
+        />
        :null}
        <FlatButton label="Withdraw"  />
         </CardActions>
