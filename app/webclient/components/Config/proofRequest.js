@@ -17,7 +17,7 @@ obj.grammarschoolcertificate={
             'restrictions': [{'cred_def_id': 'RequiredTranscriptId'}]
         },
         'attr2_referent': {
-            'name': 'fatherName',
+            'name': 'dateOfBirth',
             'restrictions': [{'cred_def_id': 'RequiredTranscriptId'}]
         },
         'attr3_referent': {

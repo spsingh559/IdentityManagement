@@ -28,7 +28,12 @@ export default class EachTAPendingServiceDetail extends React.Component{
     // handleClose = () => {
     //     this.setState({open: false});
     //   };
-
+    approveForResponse=(obj,_id)=>{
+      // add code for all services to define naviagtion path
+      if(this.props.data.serviceName=="Grammar School Certificate"){
+        this.context.router.push(this.props.data.uiRoutes+'/'+obj.name+'/'+obj.dateOfBirth+'/'+_id);
+      }
+    }
     render(){
         const actions = [
       <FlatButton
@@ -54,6 +59,7 @@ export default class EachTAPendingServiceDetail extends React.Component{
             owner={this.props.data.owner}
             proofReq={this.props.data.proofReq}
             genrateProof={this.genrateProof}
+            approveForResponse={this.approveForResponse}
  />
   </div>
   <div className="panel-footer">{this.props.data.serviceDescription}</div>

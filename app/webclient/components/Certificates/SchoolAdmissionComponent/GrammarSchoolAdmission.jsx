@@ -4,34 +4,38 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import {Grid,Row,Col,Carousel,Panel} from 'react-bootstrap';
 import FlatButton from 'material-ui/FlatButton';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import ActionHome from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 
 export default class GrammarSchoolAdmission extends React.Component {
 
     state={
-        name:"",
+        name:this.props.params.name,
+        degree:"",
         address:"",
         fatherName:"",
-        date:"",
-        gender:"",
-        grade:""
+        dateofBirth:this.props.params.dateOfBirth,
+        grade:"",
+        degreeStatus:"Pass",
+        year:''
        }
  
-      handleClose = () => this.setState({openDrawer: false});
-      handleToggle = () => this.setState({openDrawer: !this.state.openDrawer});
-
+     
+      handleDegreeChange = (event, index, degreeStatus) => this.setState({degreeStatus});
       applyGrammarSchoolAdmission=()=>{
         // alert("registerSuccess");
-        // let obj={
-        //     _id:Date.now(),
-        //     name:this.state.name,
-        //     degree:
-        //     status
-        //     year
-        //     average
-        //     ssn
-        //     dateOfBirth:this.state.date
-        // }
+        let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+        let obj={
+            _id:Date.now(),
+            name:this.props.params.name,
+            degree:this.state.degree,
+            status:this.state.degreeStatus,
+            year:this.state.year,
+            grade:this.state.grade,
+            dateOfBirth:this.props.params.dateOfBirth,
+            issuer:retrievedUserDetails.name
+        }
        
         console.log(obj);
         // Axios({
@@ -57,7 +61,8 @@ export default class GrammarSchoolAdmission extends React.Component {
       }
   
     render() {
-       
+    
+       console.log(this.props.params.name, this.props.params.dateOfBirth,this.props.params.serviceId);
         return (
           <div style={{marginTop:"90px",minHeight:"600px"}} className="homeBackground">
           <div style={{backgroundColor:"black", color:"white", height:"40px", padding:"0px 5px"}}>
@@ -70,6 +75,7 @@ export default class GrammarSchoolAdmission extends React.Component {
       floatingLabelStyle={{color:"white"}}
       hintText="Name of applicant"
       value={this.state.name}
+      disabled={true}
       //onChange = {(event,newValue) => this.setState({name:newValue})}
       floatingLabelText="Name"
       fullWidth={true}
@@ -79,39 +85,37 @@ export default class GrammarSchoolAdmission extends React.Component {
       hintStyle={{color:"white"}}
       inputStyle={{color:"white"}}
       floatingLabelStyle={{color:"white"}}
-      hintText="Father's name"
-      value={this.state.fatherName}
-      floatingLabelText="Father's Name"
+      hintText="Degree Name"
+      floatingLabelText="Name of Degree"
+      value={this.state.degree}
+      onChange = {(event,newValue) => this.setState({degree:newValue})}
       fullWidth={true}
-    />
-    <br />
-    <TextField
-      hintStyle={{color:"white"}}
-      inputStyle={{color:"white"}}
-      floatingLabelStyle={{color:"white"}}
-      hintText="Address"
-      value={this.state.address}
-      floatingLabelText="Address"
+      />
+      <br />
+      <SelectField
+      hintStyle={{color:"black"}}
+      inputStyle={{color:"black"}}
+      floatingLabelStyle={{color:"black"}}
+      hintText="Degree Status"
       fullWidth={true}
-    />
+      floatingLabelText="Pass or Fail"
+      value={this.state.degreeStatus}
+      onChange={this.handleDegreeChange}
+        >
+          <MenuItem value="Pass" primaryText="Pass" />
+          <MenuItem value="Fail" primaryText="Fail" />
+          <MenuItem value="Other" primaryText="Other" />
+    </SelectField>
     <br />
-    <TextField
-      hintStyle={{color:"white"}}
-      inputStyle={{color:"white"}}
-      floatingLabelStyle={{color:"white"}}
-      hintText="Gender"
-      floatingLabelText="Gender"
-      fullWidth={true}
-      value={this.state.gender}
-    />
-    <br />
+  
     <TextField
       hintStyle={{color:"white"}}
       inputStyle={{color:"white"}}
       floatingLabelStyle={{color:"white"}}
       hintText="Date of Birth"
       floatingLabelText="Date of Birth"
-      value={this.state.date}
+      value={this.state.dateofBirth}
+      disabled={true}
       fullWidth={true}
       />
       <br />
@@ -122,6 +126,18 @@ export default class GrammarSchoolAdmission extends React.Component {
       hintText="Primary School Grade"
       floatingLabelText="Primary School Grade"
       value={this.state.grade}
+      onChange = {(event,newValue) => this.setState({grade:newValue})}
+      fullWidth={true}
+      />
+      <br />
+      <TextField
+      hintStyle={{color:"white"}}
+      inputStyle={{color:"white"}}
+      floatingLabelStyle={{color:"white"}}
+      hintText="Year"
+      floatingLabelText="Time Duration"
+      value={this.state.year}
+      onChange = {(event,newValue) => this.setState({year:newValue})}
       fullWidth={true}
       />
       <br />

@@ -423,28 +423,29 @@ app.post('/api/birthCertificate', function(req,response){
     let WalletConfig = {'id': req.body.certificateData.name+"Wallet"}
     let WalletCredentials = {'key': req.body.certificateData.name+"_key"}
     //-----------this piece of code is written to make it dynamic, task is to make wallet status null when wallet for user does not exist and pass wallet name when it exist.
-    //  await indy.deleteWallet(WalletConfig, WalletCredentials);
-    //  console.log('wallet deleted');
-    let Wallet;
-    let flag=true;
-    try{
-        Wallet = await indy.openWallet(WalletConfig, WalletCredentials);
-        await indy.closeWallet(Wallet);
-    } catch(error){
-        flag=false;
-        // console.log('inside catch block for birthCertificate---------------------------------')
-        console.error(error)
-    }
+//     //  await indy.deleteWallet(WalletConfig, WalletCredentials);
+//     //  console.log('wallet deleted');
+//     let Wallet;
+//     let flag=true;
+//     try{
+//         Wallet = await indy.openWallet(WalletConfig, WalletCredentials);
+//         await indy.closeWallet(Wallet);
+//     } catch(error){
+//         flag=false;
+//         // console.log('inside catch block for birthCertificate---------------------------------')
+//         console.error(error)
+//     }
     
-    let walletStatus;
-if(!flag){
-    console.log('create new wallet');
-    walletStatus=null;
-}else{
-    console.log("use existing wallet");
-    walletStatus=req.body.certificateData.name+"Wallet"
-}
-this.createBirthCertificate(req.body,did,walletStatus,WalletConfig,WalletCredentials,response);
+//     let walletStatus;
+// if(!flag){
+//     console.log('create new wallet');
+//     walletStatus=null;
+// }else{
+//     console.log("use existing wallet");
+//     walletStatus=req.body.certificateData.name+"Wallet"
+// }
+// this.createBirthCertificate(req.body,did,walletStatus,WalletConfig,WalletCredentials,response);
+this.createBirthCertificate(req.body,did,null,WalletConfig,WalletCredentials,response);
 
 
     }
@@ -453,7 +454,8 @@ this.createBirthCertificate(req.body,did,walletStatus,WalletConfig,WalletCredent
 createBirthCertificate=(obj,did,walletStatus,WalletConfig,WalletCredentials,response)=>{
 genrateBC();
 async function genrateBC(){
-    // console.log('inside genrateBC ---------------------------')
+    // console.log('inside genrateBC ---------------------------');
+    console.log('data reached to', obj);
     let TAWalletConfig = {'id': obj.issuer+"Wallet"}
     let TAWalletCredentials = {'key': obj.issuer+"_key"}
 let Wallet = await indy.openWallet(TAWalletConfig, TAWalletCredentials);
@@ -511,9 +513,9 @@ let Wallet = await indy.openWallet(TAWalletConfig, TAWalletCredentials);
         "fatherName": {"raw": obj.certificateData.fatherName, "encoded": "5321642780241790123587902456789123452"},
         "motherName": {"raw": obj.certificateData.motherName, "encoded": "2213454313412354"},
         "gender": {"raw": obj.certificateData.gender, "encoded": "12434523576212321"},  
-        "dateOfBirth":{"raw": obj.certificateData.dateOfBirth, "encoded": "124345235762123213"},  
+        "dateOfBirth":{"raw": obj.certificateData.dateOfBirth, "encoded": "5321642780241790123587902456789123451"},  
         "placeOfBirth":{"raw": obj.certificateData.placeOfBirth, "encoded": "124345235762123214"}, 
-        "timeOfBirth":{"raw": obj.certificateData.timeOfBirth, "encoded": "124345235762123215"}, 
+        "timeOfBirth":{"raw": obj.certificateData.timeOfBirth, "encoded": "214234565867978098789043784384389743"}, 
         "address":{"raw": obj.certificateData.address, "encoded": "1243452357621232154366"}
     };
 
@@ -689,29 +691,8 @@ let userWallet = await indy.openWallet(userWalletConfig, userWalletCredentials);
     let aliceAcmeVerkey = await indy.keyForDid(poolHandle, TAWallet, acmeAliceConnectionResponse['did']);
 
     console.log("\"Acme\" -> Authcrypt \"Job-Application\" Proof Request for Alice");
-    // let jobApplicationProofRequestJson = {
-    //     'nonce': '14324223432421223124112121',
-    //     'name': 'grammarSchoolApplication',
-    //     'version': '0.1',
-    //     'requested_attributes': {
-    //         'attr1_referent': {
-    //             'name': 'name',
-    //             'restrictions': [{'cred_def_id': 'MmhdmzWP4mLiNosRycCDDL:3:CL:262:TAG1'}]
-    //         },
-    //         'attr2_referent': {
-    //             'name': 'fatherName',
-    //             'restrictions': [{'cred_def_id': 'MmhdmzWP4mLiNosRycCDDL:3:CL:262:TAG1'}]
-    //         },
-    //         'attr3_referent': {
-    //             'name': 'mobileNumber',
-    //             }
-            
-    //     }
-    // }
-
+    
     let authcryptedJobApplicationProofRequestJson = await indy.cryptoAuthCrypt(TAWallet, acmeAliceKey, aliceAcmeVerkey,Buffer.from(JSON.stringify(result.proof),'utf8'));
-
-    // let authcryptedJobApplicationProofRequestJson = await indy.cryptoAuthCrypt(TAWallet, acmeAliceKey, aliceAcmeVerkey,Buffer.from(JSON.stringify(jobApplicationProofRequestJson),'utf8'));
      
     console.log('authcryptedJobApplicationProofRequestJson', authcryptedJobApplicationProofRequestJson);
 
@@ -766,7 +747,32 @@ let userWallet = await indy.openWallet(userWalletConfig, userWalletCredentials);
         jobApplicationRequestedCredsJson, aliceMasterSecretId,
         schemasJson, credDefsJson, revocStatesJson);
 
+
 console.log('jobApplicationProofJson',jobApplicationProofJson);
+
+// console.log("\"Alice\" -> Authcrypt \"Job-Application\" Proof for Acme");
+//     let authcryptedJobApplicationProofJson = await indy.cryptoAuthCrypt(aliceWallet, aliceAcmeKey, acmeAliceVerkey,Buffer.from(JSON.stringify(jobApplicationProofJson),'utf8'));
+
+//     console.log("\"Alice\" -> Send authcrypted \"Job-Application\" Proof to Acme");
+
+//     console.log("\"Acme\" -> Authdecrypted \"Job-Application\" Proof from Alice");
+//     let decryptedJobApplicationProofJson, decryptedJobApplicationProof;
+//     [, decryptedJobApplicationProofJson, decryptedJobApplicationProof] = await authDecrypt(acmeWallet, acmeAliceKey, authcryptedJobApplicationProofJson);
+
+//     let revocRefDefsJson, revocRegsJson;
+//     [schemasJson, credDefsJson, revocRefDefsJson, revocRegsJson] = await verifierGetEntitiesFromLedger(poolHandle, acmeDid, decryptedJobApplicationProof['identifiers'], 'Acme');
+
+//     console.log("\"Acme\" -> Verify \"Job-Application\" Proof from Alice");
+//     assert('Bachelor of Science, Marketing' === decryptedJobApplicationProof['requested_proof']['revealed_attrs']['attr3_referent']['raw']);
+//     assert('graduated' === decryptedJobApplicationProof['requested_proof']['revealed_attrs']['attr4_referent']['raw']);
+//     assert('123-45-6789' === decryptedJobApplicationProof['requested_proof']['revealed_attrs']['attr5_referent']['raw']);
+
+//     assert('Alice' === decryptedJobApplicationProof['requested_proof']['self_attested_attrs']['attr1_referent']);
+//     assert('Garcia' === decryptedJobApplicationProof['requested_proof']['self_attested_attrs']['attr2_referent']);
+//     assert('123-45-6789' === decryptedJobApplicationProof['requested_proof']['self_attested_attrs']['attr6_referent']);
+
+//     assert(await indy.verifierVerifyProof(jobApplicationProofRequestJson, decryptedJobApplicationProofJson, schemasJson, credDefsJson, revocRefDefsJson, revocRegsJson));
+
 
 let respData={
     _id:result._id,
@@ -796,7 +802,7 @@ console.log(req.body);
         var dbo = db.db("sovrinDB");
         var myquery = { _id: req.body._id };
         var newvalues = { $set: {response: req.body.jobApplicationProofJson } };
-        dbo.collection("proof").updateOne(myquery, newvalues, function(err, res) {
+        dbo.collection("proof").updateOne(myquery, newvalues, function(err, result) {
           if (err) throw err;
           console.log("1 document updated");
           res.send("success");

@@ -55,7 +55,7 @@ ReactDOM.render(
 	
 	<Route path="/genrateProof/:name/:serviceName/:owner" component={GenrateProof} />
 	<Route path="/birthcertificate/:name/:CredDefId/:serviceId" component={BirthCertificate} />
-	<Route path="/grammarschoolcertificate/:name/:CredDefId/:serviceId" component={GrammarSchoolCertificate} />
+	<Route path="/grammarschoolcertificate/:name/:dateOfBirth/:serviceId" component={GrammarSchoolCertificate} />
 	<Route path="/myProfileEntity" component={ProfileEntity} />
 		<IndexRoute component={Home} />
 		</Route>

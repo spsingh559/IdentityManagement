@@ -13,6 +13,10 @@ export default class UserData extends React.Component{
         this.props.approve(name)
     }
 
+    approveForResponse=(obj,_id)=>{
+        this.props.approveForResponse(obj,_id);
+    }
+
     genrateProof=(name)=>{
         this.props.genrateProof(name)
     }
@@ -31,6 +35,7 @@ export default class UserData extends React.Component{
                 approve={this.approve}
                 genrateProof={this.genrateProof}
                 proofReq={this.props.proofReq}
+                approveForResponse={this.approveForResponse}
                 // getNow={this.getNow}
                 />
             )

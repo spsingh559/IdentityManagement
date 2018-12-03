@@ -61,9 +61,13 @@ export default class EachTAPendingServiceDetail extends React.Component{
       };
 
       submitResponse=()=>{
+        let obj={
+          name:this.state.respData.response.requested_proof.revealed_attrs.attr1_referent.raw,
+          dateOfBirth:this.state.respData.response.requested_proof.revealed_attrs.attr2_referent.raw
+        }
         console.log(this.state.respData.response.requested_proof.revealed_attrs.attr1_referent.raw)
         console.log(this.state.respData.response.requested_proof.revealed_attrs.attr2_referent.raw)
-        // this.props.approveForResponse(this.props.data.name);
+        this.props.approveForResponse(obj, this.state.respData._id);
       }
     render(){
         const actions = [

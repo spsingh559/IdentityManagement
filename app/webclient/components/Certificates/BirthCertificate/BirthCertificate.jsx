@@ -95,6 +95,11 @@ export default class BirthCertificate extends React.Component {
         })
           // console.log('updated service list is', this.state.serviceData);
         let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+        // var monthName=["Jan", "Feb","March","April","May","Jun","July","Aug","Sept","Oct","Nov","Dec"];
+        // var date=new Date(this.state.dob);
+        // var dob=date.getDate()+monthName[date.getMonth()]+date.getFullYear();
+        // var time=new Date(this.state.time);
+        //  var birthTime=time.getHours()+time.getMinutes()+time.getSeconds();
         let obj={
             _id:Date.now(),
             certificateData:{
@@ -112,7 +117,7 @@ export default class BirthCertificate extends React.Component {
             serviceId:this.props.params.serviceId,
             list:this.state.serviceData[count].list
         }
-       console.log('obj is');
+       console.log('obj is ');
         console.log(obj);
         Axios({
             method:'post',
