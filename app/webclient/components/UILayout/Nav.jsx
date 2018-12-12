@@ -190,6 +190,11 @@ export default class Nav extends React.Component{
                          <Link to="/createSchema"> CreateSchema </Link>
                         </MenuItem>
                             }
+                            {
+                             retrievedUserDetails.accessLevel=="A" && retrievedUserDetails.role=="TA"?<MenuItem onTouchTap={this.handleClose}>
+                              <Link to="/myAuthService"> MyAuthService </Link>
+                             </MenuItem>:null
+                            }
 
 
                             {retrievedUserDetails.accessLevel=="A" && retrievedUserDetails.role=="TA"?null:

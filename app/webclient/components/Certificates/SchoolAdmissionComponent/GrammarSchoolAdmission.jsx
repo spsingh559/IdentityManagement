@@ -7,7 +7,9 @@ import FlatButton from 'material-ui/FlatButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import ActionHome from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
-
+import { Divider } from 'material-ui';
+import Axios from 'axios';
+import restUrl from '../../restUrl';
 export default class GrammarSchoolAdmission extends React.Component {
 
     state={
@@ -18,45 +20,118 @@ export default class GrammarSchoolAdmission extends React.Component {
         dateofBirth:this.props.params.dateOfBirth,
         grade:"",
         degreeStatus:"Pass",
-        year:''
+        year:'',
+        arr:[],
+        serviceData:[]
        }
+
+       componentDidMount=()=>{
+        let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+        Axios({
+            method:'get',
+            url:restUrl+'/api/schemaCred/'+retrievedUserDetails.name,
+          })
+          .then((data) => {
+            console.log('--------------result of did----------------');
+            console.log(data)
+                //   this.setState({proofData:data.data.data})
+                
+                data.data.data.forEach((data)=>{
+                  this.state.arr.push(<MenuItem value={data.CredDefId} key={data.schemaId} primaryText={data.schemaId} />)
+                })
+          })
+          .catch((err)=>{
+            alert('Try again Error in fetching record for Cred')
+          })
+
+          Axios({
+            method:'get',
+            url:restUrl+'/api/getServicesForOwner/'+retrievedUserDetails.name,
+            })
+            .then((data) => {
+                console.log(data);
+                if(data.data.data.length==0){
+                  console.log('no service available !!')
+              }else{
+                  this.setState({serviceData:data.data.data})
+              }               
+            })
+            .catch((error) => {
+            console.log(error);
+            console.log(error+"error in new Trade");
+            });
+    }
+    
+    static get contextTypes() {
+      return {
+        router: React.PropTypes.object.isRequired
+      }
+    }
  
      
       handleDegreeChange = (event, index, degreeStatus) => this.setState({degreeStatus});
+      handleChangeRole=(event, index, value) => this.setState({value:value});
       applyGrammarSchoolAdmission=()=>{
-        // alert("registerSuccess");
+
+        let arr=[];
+        let objList={
+          name:this.state.name,
+          status:"I"
+        }
+
+        let count=0;
+          this.state.serviceData.forEach((datas,i)=>{
+            if(datas._id==this.props.params.serviceId){
+              count=i;
+                datas.list.forEach((data,i)=>{
+                    if(data.name==this.state.name){
+                    
+                        var editData=datas.list.splice(i,1,objList);
+                        // console.log('editData', editData)
+                        editData=null;
+                      }
+                })
+            }
+        })
         let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+        // 'year', 'degree', 'name', 'dateOfBirth', 'grade', 'status'
         let obj={
             _id:Date.now(),
+            certificateData:{
             name:this.props.params.name,
             degree:this.state.degree,
             status:this.state.degreeStatus,
             year:this.state.year,
             grade:this.state.grade,
-            dateOfBirth:this.props.params.dateOfBirth,
-            issuer:retrievedUserDetails.name
+            dateOfBirth:this.props.params.dateOfBirth,          
+            },            
+            CredDefId:this.state.value,
+            issuer:retrievedUserDetails.name,
+            serviceId:this.props.params.serviceId,
+            list:this.state.serviceData[count].list
         }
-       
+       console.log('obj is ');
         console.log(obj);
-        // Axios({
-        //     method:'post',
-        //     url:restUrl+'/api/applySSN',
-        //     data:obj
-        //     })
-        //     .then((data) => {
-        //         console.log(data);
-        //         if(data.data=="success"){
-        //             this.setState({ssnData:obj});
-        //            this.setState({open:true})
-
-        //         }else{
-        //             alert('Server Issue, Try Again after some Time')
-        //         }                   
-        //     })
-        //     .catch((error) => {
-        //     console.log(error);
-        //     console.log(error+"error in new Trade");
-        //     });
+        console.log('calling to server');
+        Axios({
+            method:'post',
+            url:restUrl+'/api/genrateGrammarSchoolCertificate',
+            data:obj
+            })
+            .then((data) => {
+                console.log(data);
+                if(data.data=="success"){
+                 
+                   alert('Birth Certificate is issued to'+ obj.certificateData.name);
+                   this.context.router.push('/entity');
+                }else{
+                    alert('Server Issue, Try Again after some Time')
+                }                   
+            })
+            .catch((error) => {
+            console.log(error);
+            console.log(error+"error in new Trade");
+            });
             
       }
   
@@ -69,6 +144,19 @@ export default class GrammarSchoolAdmission extends React.Component {
              <center> <h4> <span onTouchTap={this.goBack}><ActionHome color="white" style={{marginRight:"10px"}} /></span> Grammar School Certificate</h4> </center>
        </div>
        <Grid>
+       <SelectField 
+           hintStyle={{color:"white"}}
+           inputStyle={{color:"white"}}
+           floatingLabelStyle={{color:"white"}}
+           hintText="Select Schema"
+          floatingLabelText="List of Schema ID"
+          value={this.state.value}
+          onChange={this.handleChangeRole}
+          fullWidth={true}
+        >
+         {this.state.arr}
+        </SelectField>
+        <br />
   <TextField
       hintStyle={{color:"white"}}
       inputStyle={{color:"white"}}

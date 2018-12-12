@@ -31,7 +31,7 @@ export default class EachTAPendingServiceDetail extends React.Component{
     approveForResponse=(obj,_id)=>{
       // add code for all services to define naviagtion path
       if(this.props.data.serviceName=="Grammar School Certificate"){
-        this.context.router.push(this.props.data.uiRoutes+'/'+obj.name+'/'+obj.dateOfBirth+'/'+_id);
+        this.context.router.push(this.props.data.uiRoutes+'/'+obj.name+'/'+obj.dateOfBirth+'/'+this.props.data._id);
       }
     }
     render(){

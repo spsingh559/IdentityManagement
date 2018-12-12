@@ -29,6 +29,8 @@ import Registration from './components/Login/Registration';
 import  BrentServices from './components/BrentServices/BrentCreateService';
 import GenrateProof from './components/Service/GenrateProof';
 import Chat from './components/Chat/Chat';
+import MyAuthService from './components/MyAuthService/MyAuthService';
+import Context from './context';
 // All Certificate list-----------------------
 
 
@@ -36,6 +38,7 @@ import BirthCertificate from './components/Certificates/BirthCertificate/BirthCe
 import GrammarSchoolCertificate from './components/Certificates/SchoolAdmissionComponent/GrammarSchoolAdmission';
 // ------------------Certifcate End ---------------
 ReactDOM.render(
+	<Context>
 	<MuiThemeProvider>
 	<Router history ={hashHistory} >
 	<Route path="/login" component={Login} />
@@ -46,6 +49,7 @@ ReactDOM.render(
 	<Route path="/entity" component={Entity} />
 	<Route path="/myProfile" component={Profile} />
 	<Route path="/onboarding" component={Onboarding} />
+	<Route path="/myAuthService" component={MyAuthService} />
 	<Route path="/createSchema" component={CreateSchema} />
 	<Route path="/brentServices" component={BrentServices} />
 	<Route path="/myServices" component={MyServices} />
@@ -60,5 +64,6 @@ ReactDOM.render(
 		<IndexRoute component={Home} />
 		</Route>
 	</Router>
-	</MuiThemeProvider>,
+	</MuiThemeProvider>
+	</Context>,
  document.getElementById('mountapp'));

@@ -59,10 +59,10 @@ export default class Onboarding extends React.Component {
           console.log('--------------result of onboarding ----------------');
           console.log(data)
           if(data.data.response=='Success'){
-            alert('ye success')
+            alert('Onboarded successfully')
             this.context.router.push('/entity');
           }else{
-            alert('ek bar aur');
+            alert('getting error in onboarding');
           }
           
         })
