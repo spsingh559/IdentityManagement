@@ -11,6 +11,7 @@ var users = require("./webserver/routes/users");
 var app = express();
 var compiler = webpack(config);
 var fs = require("fs");
+var http = require('http');
 
 var multipart = require("connect-multiparty");
 
@@ -22,6 +23,20 @@ app.use("/", express.static(path.join(__dirname, "./webclient/")));
 
 var MongoClient = require("mongodb").MongoClient;
 var url = "mongodb://localhost:27017/";
+
+// socket connection
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
+console.log('before socket connected');
+io.on('connection',function(socket){
+  console.log('socket connected');
+  socket.on('userServiceNotification',function(msg){
+
+    console.log('data received from client is', msg);
+  });
+
+})
+// socket connection over
 
 // ----------------Indy Configuration---------------------------------
 const indy = require("indy-sdk");
@@ -2125,7 +2140,7 @@ app.use(
 app.use(webpackHotMiddleware(compiler));
 
 //Listening to port 8081
-app.listen(8080, "0.0.0.0", function(err, result) {
+server.listen(8080, "0.0.0.0", function(err, result) {
   if (err) {
     console.error("Error ", err);
   }

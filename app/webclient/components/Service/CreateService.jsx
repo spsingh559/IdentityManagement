@@ -102,45 +102,54 @@ export default class CreateService extends React.Component{
 
   handleChangeRole=(event, index, value) => this.setState({value:value});
   handleChangeAuthService=(event, index, value) => this.setState({serviceName:value});
-    submitService=()=>{
-      let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
-        var monthName=["Jan", "Feb","March","April","May","Jun","July","Aug","Sept","Oct","Nov","Dec"];
-var date=new Date();
-var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYear()+" "+ date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
-        let obj={
-            _id:Date.now(),
-            owner:retrievedUserDetails.name,
-            serviceName:this.state.serviceName,
-            serviceDescription:this.state.serviceDescription,
-            apiUrl:'/api/get'+this.state.serviceName.split(" ").join("").toLowerCase(),
-            uiRoutes:'/'+this.state.serviceName.split(" ").join("").toLowerCase(),
-            serviceStatus:'Active',
-            schemaId:this.state.value,
-            proofReq:this.state.checked,
-            list:[],
-            timeStamp:latestDate
-        }
 
-        console.log(obj);
- Axios({
-            method:'post',
-            url:restUrl+'/api/creatService',
-            data:obj
-          })
-          .then((data) => {
-            console.log('--------------result of Create Schema ----------------');
-            console.log(data)
+  //  socket part 
+  static get contextTypes() {
+    return {
+      socket:React.PropTypes.object.isRequired
+    }
+  }
+    submitService=()=>{
+
+      this.context.socket.emit('userServiceNotification',"Brent has created a service for you");
+//       let retrievedUserDetails= JSON.parse(sessionStorage.getItem('userLoginDetails'));
+//         var monthName=["Jan", "Feb","March","April","May","Jun","July","Aug","Sept","Oct","Nov","Dec"];
+// var date=new Date();
+// var latestDate=date.getDate()+"-"+monthName[date.getMonth()]+"-"+date.getFullYear()+" "+ date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+//         let obj={
+//             _id:Date.now(),
+//             owner:retrievedUserDetails.name,
+//             serviceName:this.state.serviceName,
+//             serviceDescription:this.state.serviceDescription,
+//             apiUrl:'/api/get'+this.state.serviceName.split(" ").join("").toLowerCase(),
+//             uiRoutes:'/'+this.state.serviceName.split(" ").join("").toLowerCase(),
+//             serviceStatus:'Active',
+//             schemaId:this.state.value,
+//             proofReq:this.state.checked,
+//             list:[],
+//             timeStamp:latestDate
+//         }
+
+//         console.log(obj);
+//  Axios({
+//             method:'post',
+//             url:restUrl+'/api/creatService',
+//             data:obj
+//           })
+//           .then((data) => {
+//             console.log('--------------result of Create Schema ----------------');
+//             console.log(data)
             
-            if(data.data=='success'){
-              this.setState({open:true});
-            }else{
-              alert('Error while creating service');
-            }
+//             if(data.data=='success'){
+//               this.setState({open:true});
+//             }else{
+//               alert('Error while creating service');
+//             }
             
-          })
-          .catch((err)=>{
-            console.log('catch error')
-          })
+//           })
+//           .catch((err)=>{
+//             console.log('catch error')
+//           })
        
     }
 
